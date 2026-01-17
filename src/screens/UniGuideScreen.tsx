@@ -97,7 +97,7 @@ export const UniGuideScreen = () => {
                                         borderColor: 'rgba(0,0,0,0.12)', // Increased from 0.05
                                         ...theme.shadows.md,
                                     }}
-                                    className="p-4 flex-row justify-between items-center h-full"
+                                    className="p-4 flex-row justify-between items-center min-h-[80px]"
                                 >
                                     <View className="flex-1">
                                         <Text style={{ color: theme.colors.text.primary }} className="font-bold text-base mb-0.5">{uni.name}</Text>

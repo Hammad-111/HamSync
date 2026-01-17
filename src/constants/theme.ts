@@ -3,7 +3,7 @@
  * Modern, stunning color palettes with glassmorphic design
  */
 
-export type ThemeType = 'midnight' | 'cyber' | 'ocean' | 'sunset' | 'royal' | 'emerald' | 'crimson' | 'aurora' | 'golden' | 'galactic';
+export type ThemeType = 'crimson' | 'emerald' | 'midnight' | 'cyber' | 'ocean' | 'sunset' | 'royal' | 'aurora' | 'golden' | 'galactic';
 
 const baseTheme = {
     spacing: {
@@ -56,37 +56,37 @@ export interface AppTheme {
         background: string;           // Main background
         backgroundSecondary: string;  // Secondary background
         headerBackground: string;     // Header solid color
-        headerGradient: [string, string]; // Header gradient
+        headerGradient: string[];     // Header gradient (supports 2+ colors)
         surface: string;              // Card surfaces
-        surfaceElevated: string;      // Elevated surfaces
+        surfaceElevated: string;      // Hover/Active surfaces
         primary: string;              // Primary brand color
-        primaryLight: string;         // Lighter primary
-        primaryDark: string;          // Darker primary
-        secondary: string;            // Secondary color
-        accent: string;               // Accent highlights
-        accentGlow: string;           // Glowing accent
+        primaryLight: string;
+        primaryDark: string;
+        secondary: string;            // Secondary brand color
+        accent: string;               // Accent/Call to action
+        accentGlow: string;           // Accent glow color
         text: {
             primary: string;          // Main text
-            secondary: string;        // Secondary text
-            muted: string;            // Muted text
-            inverse: string;          // Text on dark backgrounds
-            accent: string;           // Accent text
+            secondary: string;        // Secondary/Less important
+            muted: string;            // Muted/Hint text
+            inverse: string;          // Text on primary background
+            accent: string;           // Accent flavored text
         };
         glass: {
-            background: string;       // Glassmorphic background
+            background: string;       // Glass background
             border: string;           // Glass border
             shadow: string;           // Glass shadow
         };
         gradient: {
-            primary: [string, string];    // Primary gradient
-            secondary: [string, string];  // Secondary gradient
-            accent: [string, string];     // Accent gradient
+            primary: string[];        // Primary gradient
+            secondary: string[];      // Secondary gradient
+            accent: string[];         // Accent gradient
         };
         success: string;
         warning: string;
         error: string;
         info: string;
-        border: string;               // Global border color
+        border: string;               // Standard border color
     };
     spacing: typeof baseTheme.spacing;
     borderRadius: typeof baseTheme.borderRadius;
@@ -95,417 +95,417 @@ export interface AppTheme {
 }
 
 export const themes: Record<ThemeType, AppTheme> = {
-    midnight: {
-        id: 'midnight',
-        name: 'Midnight Aurora',
-        ...baseTheme,
-        colors: {
-            background: '#FFFFFF',
-            backgroundSecondary: '#F8FAFC',
-            headerBackground: '#1E1B4B',
-            headerGradient: ['#1E1B4B', '#312E81'],
-            surface: '#FFFFFF',
-            surfaceElevated: '#F1F5F9',
-            primary: '#4F46E5',
-            primaryLight: '#818CF8',
-            primaryDark: '#3730A3',
-            secondary: '#7C3AED',
-            accent: '#F59E0B',
-            accentGlow: '#FCD34D',
-            text: {
-                primary: '#0F172A',
-                secondary: '#475569',
-                muted: '#94A3B8',
-                inverse: '#FFFFFF',
-                accent: '#4F46E5',
-            },
-            glass: {
-                background: '#FFFFFF',
-                border: '#E2E8F0',
-                shadow: 'rgba(79, 70, 229, 0.1)',
-            },
-            gradient: {
-                primary: ['#4F46E5', '#7C3AED'],
-                secondary: ['#7C3AED', '#DB2777'],
-                accent: ['#F59E0B', '#EA580C'],
-            },
-            success: '#10B981',
-            warning: '#F59E0B',
-            error: '#EF4444',
-            info: '#3B82F6',
-            border: '#E2E8F0',
-        }
-    },
-    cyber: {
-        id: 'cyber',
-        name: 'Cyber Neon',
-        ...baseTheme,
-        colors: {
-            background: '#FFFFFF',
-            backgroundSecondary: '#FAFAFA',
-            headerBackground: '#000000',
-            headerGradient: ['#000000', '#1A1A1A'],
-            surface: '#FFFFFF',
-            surfaceElevated: '#F5F5F5',
-            primary: '#0891B2',
-            primaryLight: '#22D3EE',
-            primaryDark: '#155E75',
-            secondary: '#D946EF',
-            accent: '#10B981',
-            accentGlow: '#34D399',
-            text: {
-                primary: '#000000',
-                secondary: '#404040',
-                muted: '#737373',
-                inverse: '#FFFFFF',
-                accent: '#0891B2',
-            },
-            glass: {
-                background: '#FFFFFF',
-                border: '#E5E5E5',
-                shadow: 'rgba(8, 145, 178, 0.1)',
-            },
-            gradient: {
-                primary: ['#0891B2', '#10B981'],
-                secondary: ['#D946EF', '#0891B2'],
-                accent: ['#10B981', '#EAB308'],
-            },
-            success: '#10B981',
-            warning: '#EAB308',
-            error: '#F43F5E',
-            info: '#06B6D4',
-            border: '#E5E5E5',
-        }
-    },
-    ocean: {
-        id: 'ocean',
-        name: 'Ocean Depth',
-        ...baseTheme,
-        colors: {
-            background: '#FFFFFF',
-            backgroundSecondary: '#F0F9FF',
-            headerBackground: '#0369A1',
-            headerGradient: ['#0369A1', '#075985'],
-            surface: '#FFFFFF',
-            surfaceElevated: '#E0F2FE',
-            primary: '#0284C7',
-            primaryLight: '#38BDF8',
-            primaryDark: '#075985',
-            secondary: '#0891B2',
-            accent: '#F59E0B',
-            accentGlow: '#FCD34D',
-            text: {
-                primary: '#0F172A',
-                secondary: '#334155',
-                muted: '#94A3B8',
-                inverse: '#FFFFFF',
-                accent: '#0284C7',
-            },
-            glass: {
-                background: '#FFFFFF',
-                border: '#BAE6FD',
-                shadow: 'rgba(2, 132, 199, 0.1)',
-            },
-            gradient: {
-                primary: ['#0284C7', '#0891B2'],
-                secondary: ['#0891B2', '#0D9488'],
-                accent: ['#F59E0B', '#EA580C'],
-            },
-            success: '#0D9488',
-            warning: '#F59E0B',
-            error: '#EF4444',
-            info: '#0284C7',
-            border: '#BAE6FD',
-        }
-    },
-    sunset: {
-        id: 'sunset',
-        name: 'Sunset Blaze',
-        ...baseTheme,
-        colors: {
-            background: '#FFFFFF',
-            backgroundSecondary: '#FFF7ED',
-            headerBackground: '#9A3412',
-            headerGradient: ['#9A3412', '#7C2D12'],
-            surface: '#FFFFFF',
-            surfaceElevated: '#FFEDD5',
-            primary: '#EA580C',
-            primaryLight: '#FB923C',
-            primaryDark: '#9A3412',
-            secondary: '#F59E0B',
-            accent: '#DB2777',
-            accentGlow: '#F472B6',
-            text: {
-                primary: '#1C1917',
-                secondary: '#44403C',
-                muted: '#A8A29E',
-                inverse: '#FFFFFF',
-                accent: '#EA580C',
-            },
-            glass: {
-                background: '#FFFFFF',
-                border: '#FED7AA',
-                shadow: 'rgba(234, 88, 12, 0.1)',
-            },
-            gradient: {
-                primary: ['#EA580C', '#DC2626'],
-                secondary: ['#F59E0B', '#DB2777'],
-                accent: ['#DB2777', '#7C3AED'],
-            },
-            success: '#16A34A',
-            warning: '#F59E0B',
-            error: '#DC2626',
-            info: '#3B82F6',
-            border: '#FED7AA',
-        }
-    },
-    royal: {
-        id: 'royal',
-        name: 'Royal Purple',
-        ...baseTheme,
-        colors: {
-            background: '#FFFFFF',
-            backgroundSecondary: '#FAF5FF',
-            headerBackground: '#581C87',
-            headerGradient: ['#581C87', '#4C1D95'],
-            surface: '#FFFFFF',
-            surfaceElevated: '#F3E8FF',
-            primary: '#7C3AED',
-            primaryLight: '#A78BFA',
-            primaryDark: '#5B21B6',
-            secondary: '#DB2777',
-            accent: '#F59E0B',
-            accentGlow: '#FCD34D',
-            text: {
-                primary: '#1E1B4B',
-                secondary: '#4338CA',
-                muted: '#A78BFA',
-                inverse: '#FFFFFF',
-                accent: '#7C3AED',
-            },
-            glass: {
-                background: '#FFFFFF',
-                border: '#E9D5FF',
-                shadow: 'rgba(124, 58, 237, 0.1)',
-            },
-            gradient: {
-                primary: ['#7C3AED', '#DB2777'],
-                secondary: ['#DB2777', '#E11D48'],
-                accent: ['#F59E0B', '#EA580C'],
-            },
-            success: '#10B981',
-            warning: '#F59E0B',
-            error: '#EF4444',
-            info: '#3B82F6',
-            border: '#E9D5FF',
-        }
-    },
-    emerald: {
-        id: 'emerald',
-        name: 'Emerald Forest',
-        ...baseTheme,
-        colors: {
-            background: '#FFFFFF',
-            backgroundSecondary: '#ECFDF5',
-            headerBackground: '#064E3B',
-            headerGradient: ['#064E3B', '#065F46'],
-            surface: '#FFFFFF',
-            surfaceElevated: '#D1FAE5',
-            primary: '#059669',
-            primaryLight: '#34D399',
-            primaryDark: '#064E3B',
-            secondary: '#0D9488',
-            accent: '#F59E0B',
-            accentGlow: '#FCD34D',
-            text: {
-                primary: '#064E3B',
-                secondary: '#065F46',
-                muted: '#6EE7B7',
-                inverse: '#FFFFFF',
-                accent: '#059669',
-            },
-            glass: {
-                background: '#FFFFFF',
-                border: '#A7F3D0',
-                shadow: 'rgba(5, 150, 105, 0.1)',
-            },
-            gradient: {
-                primary: ['#059669', '#0D9488'],
-                secondary: ['#0D9488', '#0891B2'],
-                accent: ['#F59E0B', '#EA580C'],
-            },
-            success: '#059669',
-            warning: '#F59E0B',
-            error: '#EF4444',
-            info: '#06B6D4',
-            border: '#A7F3D0',
-        }
-    },
     crimson: {
         id: 'crimson',
-        name: 'Crimson Blade',
+        name: 'Royal Maroon',
         ...baseTheme,
         colors: {
             background: '#FFFFFF',
-            backgroundSecondary: '#FFF5F5',
+            backgroundSecondary: '#FFF1F2',
             headerBackground: '#7F1D1D',
-            headerGradient: ['#7F1D1D', '#991B1B'],
+            headerGradient: ['#7F1D1D', '#450A0A'], // Deep Maroon analog
             surface: '#FFFFFF',
-            surfaceElevated: '#FEE2E2',
-            primary: '#DC2626',
-            primaryLight: '#F87171',
-            primaryDark: '#991B1B',
-            secondary: '#B91C1C',
-            accent: '#F59E0B',
-            accentGlow: '#FCD34D',
+            surfaceElevated: '#FEF2F2',
+            primary: '#7F1D1D',
+            primaryLight: '#991B1B',
+            primaryDark: '#450A0A',
+            secondary: '#991B1B',
+            accent: '#D4AF37',
+            accentGlow: '#F1C40F',
             text: {
                 primary: '#450A0A',
                 secondary: '#7F1D1D',
-                muted: '#FCA5A5',
+                muted: '#991B1B',
                 inverse: '#FFFFFF',
-                accent: '#DC2626',
+                accent: '#7F1D1D',
             },
             glass: {
                 background: '#FFFFFF',
                 border: '#FECACA',
-                shadow: 'rgba(220, 38, 38, 0.1)',
+                shadow: 'rgba(127, 29, 29, 0.15)',
             },
             gradient: {
-                primary: ['#DC2626', '#B91C1C'],
-                secondary: ['#B91C1C', '#991B1B'],
-                accent: ['#F59E0B', '#F59E0B'],
+                primary: ['#7F1D1D', '#450A0A'],
+                secondary: ['#450A0A', '#1A0404'],
+                accent: ['#D4AF37', '#9A7B0C'],
             },
-            success: '#059669',
-            warning: '#F59E0B',
+            success: '#166534',
+            warning: '#D4AF37',
             error: '#991B1B',
-            info: '#06B6D4',
-            border: '#FECACA',
+            info: '#1E40AF',
+            border: '#FCA5A5',
         }
     },
-    aurora: {
-        id: 'aurora',
-        name: 'Aurora Borealis',
+    emerald: {
+        id: 'emerald',
+        name: 'Crimson Pro',
+        ...baseTheme,
+        colors: {
+            background: '#FFFFFF',
+            backgroundSecondary: '#FFF1F2',
+            headerBackground: '#B91C1C',
+            headerGradient: ['#B91C1C', '#991B1B'], // Pure Red analog
+            surface: '#FFFFFF',
+            surfaceElevated: '#FEF2F2',
+            primary: '#B91C1C',
+            primaryLight: '#DC2626',
+            primaryDark: '#7F1D1D',
+            secondary: '#DC2626',
+            accent: '#000000',
+            accentGlow: '#333333',
+            text: {
+                primary: '#450A0A',
+                secondary: '#991B1B',
+                muted: '#B91C1C',
+                inverse: '#FFFFFF',
+                accent: '#B91C1C',
+            },
+            glass: {
+                background: '#FFFFFF',
+                border: '#FCA5A5',
+                shadow: 'rgba(185, 28, 28, 0.15)',
+            },
+            gradient: {
+                primary: ['#B91C1C', '#991B1B'],
+                secondary: ['#991B1B', '#7F1D1D'],
+                accent: ['#000000', '#333333'],
+            },
+            success: '#166534',
+            warning: '#B45309',
+            error: '#B91C1C',
+            info: '#1E40AF',
+            border: '#FECDD3',
+        }
+    },
+    midnight: {
+        id: 'midnight',
+        name: 'Sky Harmony',
+        ...baseTheme,
+        colors: {
+            background: '#FFFFFF',
+            backgroundSecondary: '#F0F9FF',
+            headerBackground: '#0EA5E9',
+            headerGradient: ['#0EA5E9', '#2DD4BF'],
+            surface: '#FFFFFF',
+            surfaceElevated: '#E0F2FE',
+            primary: '#0369A1',
+            primaryLight: '#38BDF8',
+            primaryDark: '#0C4A6E',
+            secondary: '#2DD4BF',
+            accent: '#0EA5E9',
+            accentGlow: '#7DD3FC',
+            text: {
+                primary: '#0C4A6E',
+                secondary: '#0369A1',
+                muted: '#0EA5E9',
+                inverse: '#FFFFFF',
+                accent: '#0369A1',
+            },
+            glass: {
+                background: '#FFFFFF',
+                border: '#7DD3FC',
+                shadow: 'rgba(14, 165, 233, 0.2)',
+            },
+            gradient: {
+                primary: ['#0EA5E9', '#2DD4BF'],
+                secondary: ['#2DD4BF', '#059669'],
+                accent: ['#0EA5E9', '#38BDF8'],
+            },
+            success: '#10B981',
+            warning: '#F59E0B',
+            error: '#EF4444',
+            info: '#0EA5E9',
+            border: '#BAE6FD',
+        }
+    },
+    cyber: {
+        id: 'cyber',
+        name: 'Sunset Pulse',
+        ...baseTheme,
+        colors: {
+            background: '#FFFFFF',
+            backgroundSecondary: '#FFF1F2',
+            headerBackground: '#F43F5E',
+            headerGradient: ['#F43F5E', '#F59E0B'],
+            surface: '#FFFFFF',
+            surfaceElevated: '#FFF1F2',
+            primary: '#E11D48',
+            primaryLight: '#FB7185',
+            primaryDark: '#9F1239',
+            secondary: '#F59E0B',
+            accent: '#F59E0B',
+            accentGlow: '#FBBF24',
+            text: {
+                primary: '#9F1239',
+                secondary: '#E11D48',
+                muted: '#F43F5E',
+                inverse: '#FFFFFF',
+                accent: '#E11D48',
+            },
+            glass: {
+                background: '#FFFFFF',
+                border: '#FDA4AF',
+                shadow: 'rgba(225, 29, 72, 0.2)',
+            },
+            gradient: {
+                primary: ['#F43F5E', '#F59E0B'],
+                secondary: ['#F59E0B', '#D97706'],
+                accent: ['#F43F5E', '#FB7185'],
+            },
+            success: '#10B981',
+            warning: '#F59E0B',
+            error: '#EF4444',
+            info: '#0EA5E9',
+            border: '#FECDD3',
+        }
+    },
+    ocean: {
+        id: 'ocean',
+        name: 'Cyber Pop',
+        ...baseTheme,
+        colors: {
+            background: '#FFFFFF',
+            backgroundSecondary: '#FDF2FF',
+            headerBackground: '#FF00FF',
+            headerGradient: ['#FF00FF', '#00FFFF'],
+            surface: '#FFFFFF',
+            surfaceElevated: '#FAFAFA',
+            primary: '#C026D3',
+            primaryLight: '#FF00FF',
+            primaryDark: '#701A75',
+            secondary: '#00FFFF',
+            accent: '#FF00FF',
+            accentGlow: '#FF77FF',
+            text: {
+                primary: '#701A75',
+                secondary: '#C026D3',
+                muted: '#D946EF',
+                inverse: '#FFFFFF',
+                accent: '#C026D3',
+            },
+            glass: {
+                background: '#FFFFFF',
+                border: '#FF77FF',
+                shadow: 'rgba(255, 0, 255, 0.25)',
+            },
+            gradient: {
+                primary: ['#FF00FF', '#00FFFF'],
+                secondary: ['#00FFFF', '#22D3EE'],
+                accent: ['#FF00FF', '#FF77FF'],
+            },
+            success: '#10B981',
+            warning: '#F59E0B',
+            error: '#EF4444',
+            info: '#0EA5E9',
+            border: '#F5D0FE',
+        }
+    },
+    sunset: {
+        id: 'sunset',
+        name: 'Deep Atlantic',
         ...baseTheme,
         colors: {
             background: '#FFFFFF',
             backgroundSecondary: '#F0FDFA',
-            headerBackground: '#134E4A',
-            headerGradient: ['#134E4A', '#0F766E'],
+            headerBackground: '#0F172A',
+            headerGradient: ['#0F172A', '#14B8A6'],
             surface: '#FFFFFF',
-            surfaceElevated: '#CCFBF1',
-            primary: '#0D9488',
-            primaryLight: '#5EEAD4',
-            primaryDark: '#115E59',
-            secondary: '#059669',
-            accent: '#F472B6',
-            accentGlow: '#FBCFE8',
+            surfaceElevated: '#F0FDFA',
+            primary: '#134E4A',
+            primaryLight: '#2DD4BF',
+            primaryDark: '#042F2E',
+            secondary: '#FB7185',
+            accent: '#FB7185',
+            accentGlow: '#FDA4AF',
             text: {
-                primary: '#134E4A',
-                secondary: '#0F766E',
-                muted: '#99F6E4',
+                primary: '#042F2E',
+                secondary: '#134E4A',
+                muted: '#14B8A6',
                 inverse: '#FFFFFF',
-                accent: '#0D9488',
+                accent: '#134E4A',
             },
             glass: {
                 background: '#FFFFFF',
                 border: '#99F6E4',
-                shadow: 'rgba(13, 148, 136, 0.1)',
+                shadow: 'rgba(20, 184, 166, 0.2)',
             },
             gradient: {
-                primary: ['#0D9488', '#059669'],
-                secondary: ['#059669', '#34D399'],
-                accent: ['#F472B6', '#DB2777'],
+                primary: ['#0F172A', '#14B8A6'],
+                secondary: ['#14B8A6', '#FB7185'],
+                accent: ['#FB7185', '#FDA4AF'],
             },
-            success: '#059669',
+            success: '#10B981',
             warning: '#F59E0B',
             error: '#EF4444',
-            info: '#06B6D4',
+            info: '#0EA5E9',
             border: '#99F6E4',
+        }
+    },
+    royal: {
+        id: 'royal',
+        name: 'Electric Dream',
+        ...baseTheme,
+        colors: {
+            background: '#FFFFFF',
+            backgroundSecondary: '#F5F3FF',
+            headerBackground: '#8B5CF6',
+            headerGradient: ['#8B5CF6', '#06B6D4'],
+            surface: '#FFFFFF',
+            surfaceElevated: '#EDE9FE',
+            primary: '#5B21B6',
+            primaryLight: '#A78BFA',
+            primaryDark: '#2E1065',
+            secondary: '#06B6D4',
+            accent: '#8B5CF6',
+            accentGlow: '#C4B5FD',
+            text: {
+                primary: '#2E1065',
+                secondary: '#5B21B6',
+                muted: '#8B5CF6',
+                inverse: '#FFFFFF',
+                accent: '#5B21B6',
+            },
+            glass: {
+                background: '#FFFFFF',
+                border: '#C4B5FD',
+                shadow: 'rgba(139, 92, 246, 0.25)',
+            },
+            gradient: {
+                primary: ['#8B5CF6', '#06B6D4'],
+                secondary: ['#06B6D4', '#22D3EE'],
+                accent: ['#8B5CF6', '#C4B5FD'],
+            },
+            success: '#10B981',
+            warning: '#F59E0B',
+            error: '#EF4444',
+            info: '#0EA5E9',
+            border: '#DDD6FE',
+        }
+    },
+    aurora: {
+        id: 'aurora',
+        name: 'Space Candy',
+        ...baseTheme,
+        colors: {
+            background: '#FFFFFF',
+            backgroundSecondary: '#FDF2FF',
+            headerBackground: '#4D1D95',
+            headerGradient: ['#4D1D95', '#FF00FF', '#00FFFF'],
+            surface: '#FFFFFF',
+            surfaceElevated: '#F3E8FF',
+            primary: '#581C87',
+            primaryLight: '#A855F7',
+            primaryDark: '#2E1065',
+            secondary: '#00FFFF',
+            accent: '#FF00FF',
+            accentGlow: '#FF77FF',
+            text: {
+                primary: '#2E1065',
+                secondary: '#581C87',
+                muted: '#7E22CE',
+                inverse: '#FFFFFF',
+                accent: '#581C87',
+            },
+            glass: {
+                background: '#FFFFFF',
+                border: '#FF77FF',
+                shadow: 'rgba(255, 0, 255, 0.25)',
+            },
+            gradient: {
+                primary: ['#4D1D95', '#FF00FF'],
+                secondary: ['#FF00FF', '#00FFFF'],
+                accent: ['#00FFFF', '#22D3EE'],
+            },
+            success: '#10B981',
+            warning: '#F59E0B',
+            error: '#EF4444',
+            info: '#0EA5E9',
+            border: '#E9D5FF',
         }
     },
     golden: {
         id: 'golden',
-        name: 'Golden Luxury',
+        name: 'Golden Hour',
         ...baseTheme,
         colors: {
             background: '#FFFFFF',
-            backgroundSecondary: '#FEFCE8',
-            headerBackground: '#713F12',
-            headerGradient: ['#713F12', '#854D0E'],
+            backgroundSecondary: '#FFF7ED',
+            headerBackground: '#F59E0B',
+            headerGradient: ['#F59E0B', '#FB7185'],
             surface: '#FFFFFF',
-            surfaceElevated: '#FEF9C3',
-            primary: '#CA8A04',
-            primaryLight: '#FACC15',
-            primaryDark: '#854D0E',
-            secondary: '#A16207',
-            accent: '#000000',
-            accentGlow: '#4B5563',
+            surfaceElevated: '#FFEDD5',
+            primary: '#B45309',
+            primaryLight: '#FBBF24',
+            primaryDark: '#78350F',
+            secondary: '#FB7185',
+            accent: '#F59E0B',
+            accentGlow: '#FCD34D',
             text: {
-                primary: '#422006',
-                secondary: '#713F12',
-                muted: '#CA8A04',
+                primary: '#78350F',
+                secondary: '#B45309',
+                muted: '#D97706',
                 inverse: '#FFFFFF',
-                accent: '#CA8A04',
+                accent: '#B45309',
             },
             glass: {
                 background: '#FFFFFF',
-                border: '#FEF08A',
-                shadow: 'rgba(202, 138, 4, 0.1)',
+                border: '#FCD34D',
+                shadow: 'rgba(245, 158, 11, 0.2)',
             },
             gradient: {
-                primary: ['#CA8A04', '#A16207'],
-                secondary: ['#A16207', '#854D0E'],
-                accent: ['#000000', '#1F2937'],
+                primary: ['#F59E0B', '#FB7185'],
+                secondary: ['#FB7185', '#E11D48'],
+                accent: ['#F59E0B', '#FBBF24'],
             },
-            success: '#059669',
+            success: '#10B981',
             warning: '#F59E0B',
             error: '#EF4444',
-            info: '#06B6D4',
-            border: '#FEF08A',
+            info: '#0EA5E9',
+            border: '#FDE68A',
         }
     },
     galactic: {
         id: 'galactic',
-        name: 'Galactic Void',
+        name: 'Galactic Glow',
         ...baseTheme,
         colors: {
             background: '#FFFFFF',
             backgroundSecondary: '#F5F3FF',
             headerBackground: '#2E1065',
-            headerGradient: ['#2E1065', '#1E1B4B'],
+            headerGradient: ['#2E1065', '#9333EA', '#3B82F6'],
             surface: '#FFFFFF',
             surfaceElevated: '#EDE9FE',
-            primary: '#7C3AED',
-            primaryLight: '#A78BFA',
-            primaryDark: '#4C1D95',
-            secondary: '#5B21B6',
-            accent: '#38BDF8',
-            accentGlow: '#7DD3FC',
+            primary: '#3B82F6',
+            primaryLight: '#60A5FA',
+            primaryDark: '#1E40AF',
+            secondary: '#F97316',
+            accent: '#9333EA',
+            accentGlow: '#A855F7',
             text: {
-                primary: '#2E1065',
-                secondary: '#5B21B6',
-                muted: '#A78BFA',
+                primary: '#1E3A8A',
+                secondary: '#1E40AF',
+                muted: '#3B82F6',
                 inverse: '#FFFFFF',
-                accent: '#7C3AED',
+                accent: '#1E40AF',
             },
             glass: {
                 background: '#FFFFFF',
-                border: '#DDD6FE',
-                shadow: 'rgba(124, 58, 237, 0.1)',
+                border: '#A855F7',
+                shadow: 'rgba(147, 51, 234, 0.25)',
             },
             gradient: {
-                primary: ['#7C3AED', '#4C1D95'],
-                secondary: ['#4C1D95', '#1E1B4B'],
-                accent: ['#38BDF8', '#0EA5E9'],
+                primary: ['#2E1065', '#9333EA'],
+                secondary: ['#9333EA', '#3B82F6'],
+                accent: ['#3B82F6', '#60A5FA'],
             },
-            success: '#059669',
+            success: '#10B981',
             warning: '#F59E0B',
             error: '#EF4444',
-            info: '#06B6D4',
-            border: '#DDD6FE',
+            info: '#0EA5E9',
+            border: '#C4B5FD',
         }
-    }
+    },
 };
 
 // Default theme
-export const theme = themes.midnight;
+export const defaultTheme = themes.midnight;

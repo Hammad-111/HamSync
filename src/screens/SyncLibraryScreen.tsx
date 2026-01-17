@@ -12,6 +12,7 @@ import { useToast } from '../contexts/ToastContext';
 
 import { useTheme } from '../contexts/ThemeContext';
 import { GradientBackground } from '../components/GradientBackground';
+import { Icons8Icon } from '../components/Icons8Icon';
 
 interface Resource {
     id: string;
@@ -131,19 +132,18 @@ export const SyncLibraryScreen = () => {
                 style={{
                     backgroundColor: theme.colors.surface,
                     borderRadius: theme.borderRadius.lg,
-                    borderWidth: 1,
-                    borderColor: 'rgba(0,0,0,0.05)',
-                    ...theme.shadows.sm,
-                    shadowOpacity: 0.05,
+                    borderWidth: 1.5, // Increased
+                    borderColor: 'rgba(0,0,0,0.12)', // Increased from 0.05
+                    ...theme.shadows.md, // Stronger
                     maxWidth: 600
                 }}
                 className="w-full mx-6 mb-3 flex-row items-center justify-between p-3"
             >
                 <View className="flex-row items-center flex-1">
-                    <View style={{ backgroundColor: item.type === 'PDF' ? theme.colors.error + '15' : theme.colors.primary + '15' }} className="w-10 h-10 rounded-xl justify-center items-center mr-3">
-                        <Ionicons
-                            name={item.type === 'PDF' ? 'document-text-outline' : 'image-outline'}
-                            size={20}
+                    <View style={{ backgroundColor: item.type === 'PDF' ? theme.colors.error + '25' : theme.colors.primary + '25' }} className="w-10 h-10 rounded-xl justify-center items-center mr-3">
+                        <Icons8Icon
+                            name={item.type === 'PDF' ? 'pdf-32' : 'image'}
+                            size={24}
                             color={item.type === 'PDF' ? theme.colors.error : theme.colors.primary}
                         />
                     </View>
@@ -155,16 +155,16 @@ export const SyncLibraryScreen = () => {
                 <View className="flex-row items-center ml-2">
                     <View className="items-center mr-4">
                         <TouchableOpacity className="items-center mb-0.5" onPress={() => handleUpvote(item)}>
-                            <Ionicons name="arrow-up" size={16} color={theme.colors.primary} />
+                            <Icons8Icon name="up-arrow" size={16} color={theme.colors.primary} />
                         </TouchableOpacity>
                         <Text style={{ color: theme.colors.text.primary }} className="font-bold text-[10px]">{item.upvotes}</Text>
                     </View>
                     <TouchableOpacity
-                        style={{ backgroundColor: 'rgba(0,0,0,0.03)' }}
+                        style={{ backgroundColor: 'rgba(0,0,0,0.08)' }} // Increased from 0.03
                         className="p-2 rounded-lg"
                         onPress={() => Linking.openURL(item.url)}
                     >
-                        <Ionicons name="download-outline" size={16} color={theme.colors.text.muted} />
+                        <Icons8Icon name="download" size={18} color={theme.colors.text.muted} />
                     </TouchableOpacity>
                 </View>
             </View>
@@ -189,11 +189,11 @@ export const SyncLibraryScreen = () => {
                     backgroundColor: theme.colors.surface,
                     ...theme.shadows.lg,
                     borderRadius: theme.borderRadius.xl,
-                    borderWidth: 1.5,
-                    borderColor: 'rgba(0,0,0,0.03)',
+                    borderWidth: 2,
+                    borderColor: 'rgba(0,0,0,0.12)', // Increased from 0.03
                     maxWidth: 600
                 }} className="w-full mx-6 flex-row items-center px-5 py-0.5">
-                    <Ionicons name="search-outline" size={20} color={theme.colors.text.muted} />
+                    <Icons8Icon name="search" size={22} color={theme.colors.text.muted} />
                     <TextInput
                         placeholder="Search resources..."
                         placeholderTextColor={theme.colors.text.muted}
@@ -277,7 +277,7 @@ export const SyncLibraryScreen = () => {
                             <Text style={{ color: theme.colors.text.primary }} className="font-bold text-lg" numberOfLines={1}>Preview Resource</Text>
                         </View>
                         <TouchableOpacity onPress={() => setShowPreview(false)}>
-                            <Ionicons name="close-outline" size={32} color={theme.colors.text.primary} />
+                            <Icons8Icon name="back" size={32} color={theme.colors.text.primary} />
                         </TouchableOpacity>
                     </View>
                     <View className="flex-1">

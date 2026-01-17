@@ -5,6 +5,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../contexts/ThemeContext';
 import { GradientBackground } from '../components/GradientBackground';
+import { Icons8Icon } from '../components/Icons8Icon';
 
 const MESSAGES = [
     { id: '1', text: 'Hey, are you free to help with Physics?', sender: 'them', time: '10:00 AM' },
@@ -37,8 +38,8 @@ export const ChatScreen = () => {
                         borderRadius: theme.borderRadius.lg,
                         borderBottomRightRadius: isMe ? 4 : theme.borderRadius.lg,
                         borderBottomLeftRadius: !isMe ? 4 : theme.borderRadius.lg,
-                        borderWidth: isMe ? 0 : 1,
-                        borderColor: 'rgba(0,0,0,0.05)',
+                        borderWidth: isMe ? 0 : 1.5, // Increased
+                        borderColor: 'rgba(0,0,0,0.12)', // Increased from 0.05
                         ...theme.shadows.sm,
                         padding: 12,
                     }}
@@ -58,10 +59,10 @@ export const ChatScreen = () => {
                     style={{ paddingTop: insets.top + 30 }}
                     className="w-full max-w-[600px] flex-row items-center px-6 pb-6"
                 >
-                    <TouchableOpacity onPress={() => navigation.goBack()} className="mr-4">
-                        <Ionicons name="arrow-back-outline" size={24} color="white" />
+                    <TouchableOpacity onPress={() => navigation.goBack()} className="mr-3">
+                        <Icons8Icon name="back" size={24} color="white" />
                     </TouchableOpacity>
-                    <View style={{ backgroundColor: 'rgba(255,255,255,0.2)' }} className="w-10 h-10 rounded-full justify-center items-center mr-3">
+                    <View style={{ backgroundColor: 'rgba(255,255,255,0.3)' }} className="w-10 h-10 rounded-full justify-center items-center mr-3">
                         <Text style={{ color: 'white' }} className="font-bold">{name[0]}</Text>
                     </View>
                     <View>
@@ -93,8 +94,8 @@ export const ChatScreen = () => {
                                 style={{
                                     backgroundColor: theme.colors.background,
                                     borderRadius: 25,
-                                    borderWidth: 1,
-                                    borderColor: 'rgba(0,0,0,0.05)',
+                                    borderWidth: 1.5, // Increased
+                                    borderColor: 'rgba(0,0,0,0.15)', // Increased from 0.05
                                 }}
                                 className="flex-1 flex-row items-center px-4 mr-3"
                             >
@@ -119,7 +120,7 @@ export const ChatScreen = () => {
                                     ...theme.shadows.md,
                                 }}
                             >
-                                <Ionicons name="send" size={18} color="white" />
+                                <Icons8Icon name="send" size={20} color="white" />
                             </TouchableOpacity>
                         </View>
                     </View>

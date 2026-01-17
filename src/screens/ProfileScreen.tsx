@@ -9,13 +9,16 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import * as ImagePicker from 'expo-image-picker';
 import { useTheme } from '../contexts/ThemeContext';
 import { ThemeSelector } from '../components/ThemeSelector';
+import { useToast } from '../contexts/ToastContext';
 import { Ionicons } from '@expo/vector-icons';
 import { GradientBackground } from '../components/GradientBackground';
 import { AdvancedHeader } from '../components/AdvancedHeader';
+import { Icons8Icon } from '../components/Icons8Icon';
 
 export const ProfileScreen = () => {
     const navigation = useNavigation<any>();
     const { theme } = useTheme();
+    const { showToast } = useToast();
     const [uploading, setUploading] = useState(false);
     const [userStats, setUserStats] = useState({
         karmaPoints: 0,
@@ -84,30 +87,29 @@ export const ProfileScreen = () => {
     };
 
     const handleLogout = async () => {
-        Alert.alert(
-            'Logout',
-            'Are you sure you want to logout?',
-            [
-                { text: 'Cancel', style: 'cancel' },
-                {
-                    text: 'Logout',
-                    style: 'destructive',
-                    onPress: async () => {
-                        try {
-                            await signOut(auth);
-                            navigation.dispatch(
-                                CommonActions.reset({
-                                    index: 0,
-                                    routes: [{ name: 'Login' }],
-                                })
-                            );
-                        } catch (error) {
-                            console.error('Logout failed:', error);
-                        }
-                    },
-                },
-            ]
-        );
+        console.log('!!! LOGOUT TRIGGERED !!!');
+        showToast("Logging out...", "Direct method", "info");
+
+        try {
+            await signOut(auth);
+            console.log('Firebase SignOut SUCCESS');
+
+            // Try direct navigation first
+            navigation.navigate('Login');
+
+            // Fallback reset
+            setTimeout(() => {
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'Login' }],
+                });
+            }, 300);
+
+            showToast("Success", "Logged out", "success");
+        } catch (error) {
+            console.error('Logout error:', error);
+            showToast("Error", "Logout failed", "error");
+        }
     };
 
     const handleLinkPress = (url: string, title: string) => {
@@ -134,7 +136,7 @@ export const ProfileScreen = () => {
                 title="Profile"
                 subtitle="Manage your presence"
                 rightAction={{
-                    icon: 'log-out-outline',
+                    icon: 'logout',
                     onPress: handleLogout
                 }}
             />
@@ -153,7 +155,7 @@ export const ProfileScreen = () => {
                                 alignItems: 'center',
                                 marginBottom: 12,
                                 borderWidth: 4,
-                                borderColor: 'rgba(255,255,255,0.2)',
+                                borderColor: 'rgba(255,255,255,0.4)', // Increased from 0.2
                                 ...theme.shadows.lg,
                                 position: 'relative'
                             }}>
@@ -189,7 +191,7 @@ export const ProfileScreen = () => {
                                     {uploading ? (
                                         <ActivityIndicator size="small" color="white" />
                                     ) : (
-                                        <Ionicons name="camera" size={18} color="white" />
+                                        <Icons8Icon name="camera" size={20} color="white" />
                                     )}
                                 </View>
                             </View>
@@ -216,11 +218,11 @@ export const ProfileScreen = () => {
                             paddingHorizontal: 18,
                             paddingVertical: 10,
                             borderRadius: 16,
-                            backgroundColor: 'rgba(255,255,255,0.12)',
+                            backgroundColor: 'rgba(255,255,255,0.25)', // Increased from 0.12
                             flexDirection: 'row',
                             alignItems: 'center',
                         }}>
-                            <Ionicons name="ribbon-outline" size={18} color="#FBBF24" />
+                            <Icons8Icon name="trophy" size={20} color="#FBBF24" />
                             <Text style={{
                                 marginLeft: 10,
                                 fontSize: 16,
@@ -256,16 +258,16 @@ export const ProfileScreen = () => {
                                 gap: 12,
                                 marginBottom: 32,
                             }}>
-                                <StatCard icon="ribbon-outline" label="Reputation" value={userStats.karmaPoints.toString()} theme={theme} />
-                                <StatCard icon="document-text-outline" label="Posts" value={userStats.contributions.toString()} theme={theme} />
-                                <StatCard icon="heart-outline" label="Upvotes" value={userStats.upvotes.toString()} theme={theme} />
+                                <StatCard icon="medal" label="Reputation" value={userStats.karmaPoints.toString()} theme={theme} />
+                                <StatCard icon="edit" label="Posts" value={userStats.contributions.toString()} theme={theme} />
+                                <StatCard icon="heart" label="Upvotes" value={userStats.upvotes.toString()} theme={theme} />
                             </View>
                         </View>
 
                         {/* Theme Section */}
                         <View style={{ paddingHorizontal: 24, marginBottom: 32 }}>
                             <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
-                                <Ionicons name="color-palette-outline" size={22} color={theme.colors.primary} />
+                                <Icons8Icon name="settings" size={22} color={theme.colors.primary} />
                                 <Text style={{ fontSize: 18, fontWeight: '700', color: theme.colors.text.primary, marginLeft: 10 }}>
                                     Appearance
                                 </Text>
@@ -276,7 +278,7 @@ export const ProfileScreen = () => {
                         {/* Settings Section */}
                         <View style={{ paddingHorizontal: 24, marginBottom: 32 }}>
                             <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
-                                <Ionicons name="settings-outline" size={22} color={theme.colors.primary} />
+                                <Icons8Icon name="settings" size={22} color={theme.colors.primary} />
                                 <Text style={{ fontSize: 18, fontWeight: '700', color: theme.colors.text.primary, marginLeft: 10 }}>
                                     Settings
                                 </Text>
@@ -286,17 +288,17 @@ export const ProfileScreen = () => {
                                 backgroundColor: theme.colors.surface,
                                 borderRadius: 20,
                                 overflow: 'hidden',
-                                borderWidth: 1,
-                                borderColor: 'rgba(0,0,0,0.05)',
+                                borderWidth: 1.5,
+                                borderColor: 'rgba(0,0,0,0.1)', // Increased from 0.05
                                 ...theme.shadows.sm,
                             }}>
-                                <SettingsItem icon="shield-checkmark-outline" label="Privacy Policy" onPress={() => navigation.navigate('PrivacyPolicy')} theme={theme} />
+                                <SettingsItem icon="privacy" label="Privacy Policy" onPress={() => navigation.navigate('PrivacyPolicy')} theme={theme} />
                                 <Divider theme={theme} />
-                                <SettingsItem icon="document-text-outline" label="Terms & Conditions" onPress={() => navigation.navigate('TermsConditions')} theme={theme} />
+                                <SettingsItem icon="list" label="Terms & Conditions" onPress={() => navigation.navigate('TermsConditions')} theme={theme} />
                                 <Divider theme={theme} />
-                                <SettingsItem icon="help-circle-outline" label="Help & Support" onPress={() => navigation.navigate('HelpSupport')} theme={theme} />
+                                <SettingsItem icon="help" label="Help & Support" onPress={() => navigation.navigate('HelpSupport')} theme={theme} />
                                 <Divider theme={theme} />
-                                <SettingsItem icon="information-circle-outline" label="About HamSync" onPress={() => navigation.navigate('About')} theme={theme} showChevron={true} />
+                                <SettingsItem icon="info" label="About HamSync" onPress={() => navigation.navigate('About')} theme={theme} showChevron={true} />
                             </View>
                         </View>
 
@@ -306,14 +308,14 @@ export const ProfileScreen = () => {
                                 <View style={{
                                     padding: 16,
                                     borderRadius: 16,
-                                    backgroundColor: theme.colors.error + '10',
-                                    borderWidth: 1.5,
-                                    borderColor: theme.colors.error + '20',
+                                    backgroundColor: theme.colors.error + '15', // Increased from 10
+                                    borderWidth: 2,
+                                    borderColor: theme.colors.error + '30', // Increased from 20
                                     flexDirection: 'row',
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                 }}>
-                                    <Ionicons name="log-out-outline" size={22} color={theme.colors.error} />
+                                    <Icons8Icon name="logout" size={22} color={theme.colors.error} />
                                     <Text style={{ marginLeft: 10, fontSize: 16, fontWeight: '700', color: theme.colors.error }}>
                                         Logout Account
                                     </Text>
@@ -333,20 +335,20 @@ const StatCard = ({ icon, label, value, theme }: any) => (
         flex: 1,
         backgroundColor: theme.colors.surface,
         borderRadius: 16,
-        padding: 12, // Reduced padding
+        padding: 12,
         alignItems: 'center',
         ...theme.shadows.sm,
     }}>
         <View style={{
-            width: 38, // Smaller icon container
+            width: 38,
             height: 38,
-            borderRadius: 12, // Squircle shape
-            backgroundColor: theme.colors.primary + '10',
+            borderRadius: 12,
+            backgroundColor: theme.colors.primary + '20',
             justifyContent: 'center',
             alignItems: 'center',
             marginBottom: 8,
         }}>
-            <Ionicons name={icon} size={20} color={theme.colors.primary} />
+            <Icons8Icon name={icon} size={20} color={theme.colors.primary} />
         </View>
         <Text style={{ fontSize: 18, fontWeight: '800', color: theme.colors.text.primary }}>{value}</Text>
         <Text style={{ fontSize: 11, fontWeight: '600', color: theme.colors.text.muted, marginTop: 2 }}>{label}</Text>
@@ -359,14 +361,14 @@ const SettingsItem = ({ icon, label, onPress, theme, showChevron = true }: any) 
         activeOpacity={0.7}
         style={{ flexDirection: 'row', alignItems: 'center', padding: 18 }}
     >
-        <View style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: theme.colors.primary + '08', justifyContent: 'center', alignItems: 'center' }}>
-            <Ionicons name={icon} size={20} color={theme.colors.primary} />
+        <View style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: theme.colors.primary + '15', justifyContent: 'center', alignItems: 'center' }}>
+            <Icons8Icon name={icon} size={20} color={theme.colors.primary} />
         </View>
         <Text style={{ flex: 1, marginLeft: 14, fontSize: 16, fontWeight: '600', color: theme.colors.text.primary }}>{label}</Text>
-        {showChevron && <Ionicons name="chevron-forward" size={18} color={theme.colors.text.muted} />}
+        {showChevron && <Icons8Icon name="chevron-right" size={18} color={theme.colors.text.muted} />}
     </TouchableOpacity>
 );
 
 const Divider = ({ theme }: any) => (
-    <View style={{ height: 1, backgroundColor: 'rgba(0,0,0,0.05)', marginHorizontal: 16 }} />
+    <View style={{ height: 1, backgroundColor: 'rgba(0,0,0,0.1)', marginHorizontal: 16 }} />
 );

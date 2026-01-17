@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../services/firebaseConfig';
@@ -10,6 +9,7 @@ import { useTheme } from '../contexts/ThemeContext';
 import { getUserProfile } from '../services/userService';
 import { GradientBackground } from '../components/GradientBackground';
 import { ThemedInput } from '../components/ThemedInput';
+import { Icons8Icon } from '../components/Icons8Icon';
 
 export const CreatePostScreen = () => {
     const navigation = useNavigation<any>();
@@ -97,7 +97,7 @@ export const CreatePostScreen = () => {
                             onPress={() => navigation.goBack()}
                             className="w-10 h-10 bg-white/10 rounded-full justify-center items-center border border-white/20"
                         >
-                            <Ionicons name="arrow-back" size={24} color="white" />
+                            <Icons8Icon name="back" size={24} color="white" />
                         </TouchableOpacity>
                         <Text className="text-white text-2xl font-poppins font-bold ml-4">Create Post</Text>
                     </View>

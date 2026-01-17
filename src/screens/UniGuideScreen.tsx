@@ -4,8 +4,8 @@ import { useTheme } from '../contexts/ThemeContext';
 import { GradientBackground } from '../components/GradientBackground';
 import { useNavigation } from '@react-navigation/native';
 import { useToast } from '../contexts/ToastContext';
-import { Ionicons } from '@expo/vector-icons';
 import { AdvancedHeader } from '../components/AdvancedHeader';
+import { Icons8Icon } from '../components/Icons8Icon';
 
 const UNIVERSITIES = [
     {
@@ -68,11 +68,11 @@ export const UniGuideScreen = () => {
                     backgroundColor: theme.colors.surface,
                     ...theme.shadows.lg,
                     borderRadius: theme.borderRadius.xl,
-                    borderWidth: 1.5,
-                    borderColor: 'rgba(0,0,0,0.03)',
+                    borderWidth: 2,
+                    borderColor: 'rgba(0,0,0,0.12)', // Increased from 0.03
                     maxWidth: 800
                 }} className="w-full mx-6 flex-row items-center px-5 py-0.5">
-                    <Ionicons name="search-outline" size={20} color={theme.colors.text.muted} />
+                    <Icons8Icon name="search" size={22} color={theme.colors.text.muted} />
                     <TextInput
                         placeholder="Search universities..."
                         placeholderTextColor={theme.colors.text.muted}
@@ -84,7 +84,7 @@ export const UniGuideScreen = () => {
                 </View>
             </View>
 
-            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1, paddingBottom: 100, paddingTop: 10 }}>
+            <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1, paddingBottom: 100, paddingTop: 10 }}>
                 <View className="flex-1 items-center px-6">
                     <View className="w-full max-w-[800px] flex-row flex-wrap justify-between">
                         {filteredUnis.map(uni => (
@@ -93,9 +93,9 @@ export const UniGuideScreen = () => {
                                     style={{
                                         backgroundColor: theme.colors.surface,
                                         borderRadius: theme.borderRadius.lg,
-                                        borderWidth: 1,
-                                        borderColor: 'rgba(0,0,0,0.05)',
-                                        ...theme.shadows.sm,
+                                        borderWidth: 1.5, // Increased
+                                        borderColor: 'rgba(0,0,0,0.12)', // Increased from 0.05
+                                        ...theme.shadows.md,
                                     }}
                                     className="p-4 flex-row justify-between items-center h-full"
                                 >
@@ -103,8 +103,8 @@ export const UniGuideScreen = () => {
                                         <Text style={{ color: theme.colors.text.primary }} className="font-bold text-base mb-0.5">{uni.name}</Text>
                                         <Text style={{ color: theme.colors.text.muted }} className="text-[11px] mb-2">{uni.location} • {uni.type}.</Text>
 
-                                        <View style={{ backgroundColor: theme.colors.primary + '15', borderColor: theme.colors.primary + '30' }} className="flex-row items-center self-start px-2 py-0.5 rounded-md border">
-                                            <Ionicons name="school-outline" size={10} color={theme.colors.primary} />
+                                        <View style={{ backgroundColor: theme.colors.primary + '25', borderColor: theme.colors.primary + '40' }} className="flex-row items-center self-start px-2 py-0.5 rounded-md border">
+                                            <Icons8Icon name="school" size={12} color={theme.colors.primary} />
                                             <Text style={{ color: theme.colors.primary }} className="text-[9px] font-bold ml-1 uppercase">{uni.test}</Text>
                                         </View>
                                     </View>
@@ -114,7 +114,7 @@ export const UniGuideScreen = () => {
                                         <Text style={{ color: theme.colors.text.muted }} className="text-[9px] mb-2 font-medium">Ratio: {uni.formula}</Text>
 
                                         <TouchableOpacity
-                                            style={{ backgroundColor: theme.colors.primary + '10', borderColor: theme.colors.primary + '20' }}
+                                            style={{ backgroundColor: theme.colors.primary + '15', borderColor: theme.colors.primary + '30' }} // Increased from 10/20
                                             className="flex-row items-center px-3 py-1.5 rounded-lg border active:opacity-70"
                                             onPress={() => {
                                                 if (['NUST', 'UET', 'COMSATS'].includes(uni.name)) {
@@ -124,7 +124,7 @@ export const UniGuideScreen = () => {
                                                 }
                                             }}
                                         >
-                                            <Ionicons name="calculator-outline" size={14} color={theme.colors.primary} />
+                                            <Icons8Icon name="calculator-96" size={16} color={theme.colors.primary} />
                                             <Text style={{ color: theme.colors.primary }} className="text-[12px] font-semibold ml-1.5">Calculate</Text>
                                         </TouchableOpacity>
                                     </View>

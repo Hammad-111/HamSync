@@ -36,8 +36,8 @@ const HighlightText = ({ text, highlight }: { text: string; highlight?: string }
     return (
         <Text style={{ color: theme.colors.text.primary }}>
             {parts.map((part, i) => (
-                regex.test(part) ? (
-                    <Text key={i} style={{ backgroundColor: theme.colors.primary + '20', color: theme.colors.primary }}>{part}</Text>
+                part.toLowerCase() === highlight.toLowerCase() ? (
+                    <Text key={i} style={{ backgroundColor: theme.colors.primary + '45', color: theme.colors.primary, fontWeight: '800' }}>{part}</Text>
                 ) : (
                     <Text key={i}>{part}</Text>
                 )
@@ -56,10 +56,10 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onPress, searchQuery }
             borderRadius: theme.borderRadius.lg,
             padding: 16,
             marginBottom: 16,
-            borderWidth: 1,
-            borderColor: 'rgba(0,0,0,0.05)',
-            ...theme.shadows.sm,
-            shadowOpacity: 0.05,
+            borderWidth: 1.5,
+            borderColor: 'rgba(0,0,0,0.15)', // Increased from 0.08
+            ...theme.shadows.md,
+            shadowOpacity: 0.1, // Increased from 0.08
         }}>
             <View className="flex-row items-center mb-3">
                 <View style={{ backgroundColor: theme.colors.surfaceElevated }} className="w-10 h-10 rounded-full mr-3 justify-center items-center">
@@ -74,9 +74,13 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onPress, searchQuery }
                     <Text style={{ color: theme.colors.text.muted }} className="text-xs font-inter">{post.author.university}</Text>
                 </View>
                 <View style={{
-                    backgroundColor: isAsking ? theme.colors.error + '10' : theme.colors.success + '10',
-                    borderColor: isAsking ? theme.colors.error + '30' : theme.colors.success + '30',
-                }} className="px-3 py-1 rounded-full border">
+                    backgroundColor: isAsking ? theme.colors.error + '15' : theme.colors.success + '15',
+                    borderColor: isAsking ? theme.colors.error + '40' : theme.colors.success + '40',
+                    borderRadius: theme.borderRadius.sm,
+                    paddingHorizontal: 10,
+                    paddingVertical: 4,
+                    borderWidth: 1,
+                }}>
                     <Text style={{ color: isAsking ? theme.colors.error : theme.colors.success }} className="text-xs font-bold">
                         {isAsking ? 'Needs Help' : 'Can Help'}
                     </Text>
@@ -95,7 +99,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onPress, searchQuery }
 
             <TouchableOpacity
                 onPress={onPress}
-                style={{ backgroundColor: theme.colors.primary + '10', borderColor: theme.colors.primary + '20' }}
+                style={{ backgroundColor: theme.colors.primary + '20', borderColor: theme.colors.primary + '30' }}
                 className="py-2.5 rounded-xl border active:opacity-70"
             >
                 <Text style={{ color: theme.colors.primary }} className="text-center font-bold">Chat Now</Text>

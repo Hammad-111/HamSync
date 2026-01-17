@@ -11,11 +11,12 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../contexts/ThemeContext';
+import { Icons8Icon } from './Icons8Icon';
 
 interface ThemedInputProps extends TextInputProps {
     label?: string;
-    leftIcon?: keyof typeof Ionicons.glyphMap;
-    rightIcon?: keyof typeof Ionicons.glyphMap;
+    leftIcon?: string | keyof typeof Ionicons.glyphMap;
+    rightIcon?: string | keyof typeof Ionicons.glyphMap;
     onRightIconPress?: () => void;
     error?: string;
     containerStyle?: StyleProp<ViewStyle>;
@@ -58,7 +59,7 @@ export const ThemedInput: React.FC<ThemedInputProps> = ({
 
     const borderColor = focusAnim.interpolate({
         inputRange: [0, 1],
-        outputRange: ['rgba(0,0,0,0.05)', theme.colors.primary],
+        outputRange: ['rgba(0,0,0,0.08)', theme.colors.primary], // Increased from 0.05
     });
 
     const elevation = focusAnim.interpolate({
@@ -100,9 +101,9 @@ export const ThemedInput: React.FC<ThemedInputProps> = ({
             >
                 <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16 }}>
                     {leftIcon && (
-                        <Ionicons
+                        <Icons8Icon
                             name={leftIcon}
-                            size={20}
+                            size={22}
                             color={isFocused ? theme.colors.primary : theme.colors.text.muted}
                             style={{ marginRight: 12 }}
                         />
@@ -124,9 +125,9 @@ export const ThemedInput: React.FC<ThemedInputProps> = ({
 
                     {rightIcon && (
                         <TouchableOpacity onPress={onRightIconPress} activeOpacity={0.7} style={{ padding: 4 }}>
-                            <Ionicons
+                            <Icons8Icon
                                 name={rightIcon}
-                                size={20}
+                                size={22}
                                 color={theme.colors.text.muted}
                             />
                         </TouchableOpacity>

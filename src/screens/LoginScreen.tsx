@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Image, Animated, Easing, KeyboardAvoidingView, Platform, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, Animated, Easing, KeyboardAvoidingView, Platform, ScrollView, ActivityIndicator, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { loginWithEmail } from '../services/authService';
@@ -7,15 +7,22 @@ import { useToast } from '../contexts/ToastContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { ThemedInput } from '../components/ThemedInput';
 import { GradientBackground } from '../components/GradientBackground';
+import { Icons8Icon } from '../components/Icons8Icon';
 
 export const LoginScreen = () => {
     const navigation = useNavigation<any>();
     const { showToast } = useToast();
     const { theme } = useTheme();
+    const { width, height } = useWindowDimensions();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+
+    // Responsive scaling
+    const isSmallDevice = height < 700;
+    const isTablet = width >= 768;
+    const logoSize = isTablet ? 140 : (isSmallDevice ? 80 : 100);
 
     // Animation values
     const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -88,7 +95,7 @@ export const LoginScreen = () => {
                     contentContainerStyle={{ flexGrow: 1 }}
                     keyboardShouldPersistTaps="handled"
                 >
-                    <View className="flex-1 justify-center items-center px-8 py-8">
+                    <View className="flex-1 justify-center items-center px-8 py-10">
                         <View className="w-full max-w-[450px]">
                             {/* Logo Section */}
                             <Animated.View
@@ -102,25 +109,41 @@ export const LoginScreen = () => {
                                     style={{
                                         backgroundColor: theme.colors.surface,
                                         ...theme.shadows.lg,
-                                        width: 100,
-                                        height: 100,
+                                        width: logoSize,
+                                        height: logoSize,
+                                        borderRadius: logoSize * 0.3,
+                                        borderWidth: 1.5,
+                                        borderColor: 'rgba(255,255,255,0.2)',
                                     }}
-                                    className="rounded-[30px] items-center justify-center mb-6 border border-black/5"
+                                    className="items-center justify-center mb-6 overflow-hidden"
                                 >
-                                    <Image
-                                        source={require('../../assets/logo.png')}
-                                        style={{ width: 70, height: 70 }}
-                                        resizeMode="contain"
+                                    <Icons8Icon
+                                        name="rocket"
+                                        size={logoSize * 0.55}
+                                        color={theme.colors.primary}
+                                    />
+                                    {/* Glass reflection effect */}
+                                    <View
+                                        style={{
+                                            position: 'absolute',
+                                            top: -10,
+                                            left: -10,
+                                            width: '50%',
+                                            height: '50%',
+                                            backgroundColor: 'white',
+                                            opacity: 0.1,
+                                            borderRadius: 20
+                                        }}
                                     />
                                 </View>
 
                                 <Text
-                                    style={{ color: theme.colors.text.inverse }}
-                                    className="text-4xl font-poppins font-bold"
+                                    style={{ color: '#FFFFFF' }}
+                                    className={`${isSmallDevice ? 'text-3xl' : 'text-4xl'} font-poppins font-bold tracking-tight`}
                                 >
                                     HamSync
                                 </Text>
-                                <Text style={{ color: theme.colors.text.inverse, opacity: 0.8 }} className="font-inter mt-1 text-sm">Unity in Learning</Text>
+                                <Text style={{ color: '#FFFFFF', opacity: 0.8 }} className="font-inter mt-1 text-sm tracking-wide">Unity in Learning</Text>
                             </Animated.View>
 
                             {/* Form Section */}
@@ -129,20 +152,23 @@ export const LoginScreen = () => {
                                     opacity: fadeAnim,
                                     transform: [{ translateY: slideAnim }],
                                     backgroundColor: theme.colors.surface,
-                                    ...theme.shadows.sm,
-                                    padding: 24,
-                                    borderRadius: 30,
-                                    borderWidth: 1,
-                                    borderColor: 'rgba(0,0,0,0.05)'
+                                    ...theme.shadows.lg,
+                                    padding: isSmallDevice ? 20 : 28,
+                                    borderRadius: 35,
+                                    borderWidth: 1.5,
+                                    borderColor: theme.colors.border,
                                 }}
                             >
-                                <Text style={{ color: theme.colors.text.primary }} className="text-2xl font-poppins font-bold mb-6">Welcome Back</Text>
+                                <View className="flex-row items-baseline mb-6">
+                                    <Text style={{ color: theme.colors.text.primary }} className="text-2xl font-poppins font-bold">Welcome Back</Text>
+                                    <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: theme.colors.primary, marginLeft: 6 }} />
+                                </View>
 
                                 <ThemedInput
                                     placeholder="Email Address"
                                     value={email}
                                     onChangeText={setEmail}
-                                    leftIcon="mail-outline"
+                                    leftIcon="user"
                                     keyboardType="email-address"
                                     autoCapitalize="none"
                                 />
@@ -151,7 +177,7 @@ export const LoginScreen = () => {
                                     placeholder="Password"
                                     value={password}
                                     onChangeText={setPassword}
-                                    leftIcon="lock-closed-outline"
+                                    leftIcon="privacy"
                                     rightIcon={showPassword ? 'eye-outline' : 'eye-off-outline'}
                                     onRightIconPress={() => setShowPassword(!showPassword)}
                                     secureTextEntry={!showPassword}

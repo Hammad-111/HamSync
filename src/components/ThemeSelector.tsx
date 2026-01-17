@@ -78,7 +78,7 @@ const ThemePill = ({ themeId, name, isSelected, onSelect }: any) => {
                 isSelected && styles.selectedLabel,
                 { color: isSelected ? targetTheme.colors.primary : '#94A3B8' }
             ]}>
-                {name.split(' ')[0]} {/* Show only first name for compactness */}
+                {name.includes(' ') ? name.split(' ')[0] : name}
             </Text>
         </TouchableOpacity>
     );

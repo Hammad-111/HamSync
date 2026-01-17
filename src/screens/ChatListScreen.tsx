@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../contexts/ThemeContext';
 import { GradientBackground } from '../components/GradientBackground';
-import { Ionicons } from '@expo/vector-icons';
+import { Icons8Icon } from '../components/Icons8Icon';
 
 const CHATS = [
     { id: '1', name: 'Ali Khan', message: 'Thanks for the help!', time: '2m', unread: 2, avatar: null },
@@ -23,15 +23,14 @@ export const ChatListScreen = () => {
                 style={{
                     backgroundColor: theme.colors.surface,
                     borderRadius: theme.borderRadius.lg,
-                    borderWidth: 1,
-                    borderColor: 'rgba(0,0,0,0.04)',
-                    ...theme.shadows.sm,
-                    shadowOpacity: 0.05,
+                    borderWidth: 1.5, // Increased
+                    borderColor: 'rgba(0,0,0,0.12)', // Increased from 0.04
+                    ...theme.shadows.md, // Stronger
                     maxWidth: 600
                 }}
                 className="w-full mx-6 mb-3 p-4 flex-row items-center"
             >
-                <View style={{ backgroundColor: theme.colors.primary + '15' }} className="w-12 h-12 rounded-full justify-center items-center mr-4">
+                <View style={{ backgroundColor: theme.colors.primary + '25' }} className="w-12 h-12 rounded-full justify-center items-center mr-4">
                     <Text style={{ color: theme.colors.primary }} className="font-bold text-lg">{item.name[0]}</Text>
                 </View>
                 <View className="flex-1">
@@ -62,7 +61,7 @@ export const ChatListScreen = () => {
                         <Text style={{ color: theme.colors.text.inverse, opacity: 0.8 }} className="font-inter mt-0.5 text-sm">Active Discussions</Text>
                     </View>
                     <TouchableOpacity style={{ backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: 12, padding: 8 }}>
-                        <Ionicons name="add" size={24} color="white" />
+                        <Icons8Icon name="plus" size={24} color="white" />
                     </TouchableOpacity>
                 </View>
             </View>

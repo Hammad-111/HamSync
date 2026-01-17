@@ -1,9 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Platform, Animated, Dimensions } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../contexts/ThemeContext';
 import { useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
+import { Icons8Icon } from './Icons8Icon';
 
 const { width } = Dimensions.get('window');
 
@@ -12,7 +13,7 @@ interface AdvancedHeaderProps {
     subtitle?: string;
     showBack?: boolean;
     rightAction?: {
-        icon: keyof typeof Ionicons.glyphMap;
+        icon: string;
         onPress: () => void;
     };
     customRight?: React.ReactNode;
@@ -71,7 +72,7 @@ export const AdvancedHeader: React.FC<AdvancedHeaderProps> = ({
                             style={[styles.iconButton, { backgroundColor: 'rgba(255,255,255,0.1)' }]}
                             activeOpacity={0.7}
                         >
-                            <Ionicons name="arrow-back" size={24} color="white" />
+                            <Icons8Icon name="back" size={24} color="white" />
                         </TouchableOpacity>
                     )}
                 </View>
@@ -92,7 +93,7 @@ export const AdvancedHeader: React.FC<AdvancedHeaderProps> = ({
                             style={[styles.iconButton, { backgroundColor: 'rgba(255,255,255,0.1)' }]}
                             activeOpacity={0.7}
                         >
-                            <Ionicons name={rightAction.icon} size={24} color="white" />
+                            <Icons8Icon name={rightAction.icon} size={24} color="white" />
                         </TouchableOpacity>
                     ) : (
                         <View style={{ width: 44 }} />

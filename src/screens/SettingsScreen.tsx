@@ -14,6 +14,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { GradientBackground } from '../components/GradientBackground';
 import { AdvancedHeader } from '../components/AdvancedHeader';
+import { Icons8Icon } from '../components/Icons8Icon';
 
 export const SettingsScreen = () => {
     const { theme } = useTheme();
@@ -36,7 +37,7 @@ export const SettingsScreen = () => {
                         {/* Theme Section */}
                         <View style={styles.section}>
                             <View style={styles.sectionHeader}>
-                                <Ionicons name="color-palette" size={24} color={theme.colors.primary} />
+                                <Icons8Icon name="settings" size={24} color={theme.colors.primary} />
                                 <Text style={[styles.sectionTitle, { color: theme.colors.text.primary }]}>
                                     Appearance
                                 </Text>
@@ -50,7 +51,7 @@ export const SettingsScreen = () => {
                         {/* App Info Section */}
                         <View style={styles.section}>
                             <View style={styles.sectionHeader}>
-                                <Ionicons name="information-circle" size={24} color={theme.colors.primary} />
+                                <Icons8Icon name="info" size={24} color={theme.colors.primary} />
                                 <Text style={[styles.sectionTitle, { color: theme.colors.text.primary }]}>
                                     About
                                 </Text>

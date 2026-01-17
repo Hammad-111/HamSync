@@ -8,6 +8,7 @@ import { auth, db } from '../services/firebaseConfig';
 import { doc, onSnapshot, query, collection, orderBy } from 'firebase/firestore';
 import { PostCard } from '../components/PostCard';
 import { AdvancedHeader } from '../components/AdvancedHeader';
+import { Icons8Icon } from '../components/Icons8Icon';
 
 interface Post {
     id: string;
@@ -82,11 +83,12 @@ export const HomeScreen = () => {
                 showBack={false}
                 customRight={
                     <View style={{
-                        backgroundColor: 'rgba(0,0,0,0.2)',
-                        borderColor: 'rgba(251, 191, 36, 0.5)', // Amber border
-                        borderWidth: 1
+                        backgroundColor: 'rgba(0,0,0,0.3)', // Increased from 0.2
+                        borderColor: 'rgba(251, 191, 36, 0.8)', // Stronger Amber border
+                        borderWidth: 1.5,
+                        ...theme.shadows.sm,
                     }} className="px-3 py-1.5 rounded-full flex-row items-center backdrop-blur-md">
-                        <Ionicons name="ribbon" size={16} color="#FBBF24" style={{ marginRight: 6 }} />
+                        <Icons8Icon name="trophy" size={18} color="#FBBF24" style={{ marginRight: 6 }} />
                         <Text style={{ color: '#FBBF24', fontSize: 13, fontWeight: '800', letterSpacing: 0.5 }}>
                             {userPoints} Reputation
                         </Text>
@@ -100,11 +102,11 @@ export const HomeScreen = () => {
                     backgroundColor: theme.colors.surface,
                     ...theme.shadows.lg,
                     borderRadius: theme.borderRadius.xl,
-                    borderWidth: 1.5,
-                    borderColor: 'rgba(0,0,0,0.03)',
+                    borderWidth: 2, // Thicker
+                    borderColor: 'rgba(0,0,0,0.12)', // Increased from 0.03
                     maxWidth: 800
                 }} className="w-full mx-6 flex-row items-center px-5 py-0.5">
-                    <Ionicons name="search-outline" size={20} color={theme.colors.text.muted} />
+                    <Icons8Icon name="search" size={22} color={theme.colors.text.muted} />
                     <TextInput
                         placeholder="What do you want to learn today?"
                         placeholderTextColor={theme.colors.text.muted}
@@ -149,8 +151,8 @@ export const HomeScreen = () => {
                                                 padding: 16,
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
-                                                borderWidth: 1,
-                                                borderColor: 'rgba(0,0,0,0.03)'
+                                                borderWidth: 1.5,
+                                                borderColor: 'rgba(0,0,0,0.1)' // Increased from 0.03
                                             }}
                                         >
                                             <View className="w-16 h-16 mb-3 justify-center items-center">
@@ -218,7 +220,7 @@ export const HomeScreen = () => {
                     shadowColor: theme.colors.primary,
                 }}
             >
-                <Ionicons name="add-outline" size={32} color="white" />
+                <Icons8Icon name="plus" size={28} color="white" />
             </TouchableOpacity>
         </GradientBackground >
     );

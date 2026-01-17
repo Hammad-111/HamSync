@@ -1,15 +1,16 @@
 import React, { useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Platform, useWindowDimensions } from 'react-native';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
-import { Ionicons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
 import Animated, {
     useAnimatedStyle,
     useSharedValue,
     withSpring,
+    FadeIn,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../contexts/ThemeContext';
+import { Icons8Icon } from '../components/Icons8Icon';
 
 export const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigation }) => {
     const { theme } = useTheme();
@@ -52,8 +53,8 @@ export const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, 
                         styles.indicator,
                         indicatorStyle,
                         {
-                            backgroundColor: theme.colors.primary + '15',
-                            width: TAB_WIDTH - 12,
+                            backgroundColor: theme.colors.primary + '25', // Increased from 15
+                            width: (TAB_WIDTH || 80) - 12, // Handle initial render
                         }
                     ]}
                 />
@@ -74,12 +75,13 @@ export const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, 
                         }
                     };
 
-                    let iconName: keyof typeof Ionicons.glyphMap = 'home';
-                    if (route.name === 'Home') iconName = isFocused ? 'home' : 'home-outline';
-                    else if (route.name === 'UniGuide') iconName = isFocused ? 'school' : 'school-outline';
-                    else if (route.name === 'SyncLibrary') iconName = isFocused ? 'library' : 'library-outline';
-                    else if (route.name === 'ChatSync') iconName = isFocused ? 'chatbubbles' : 'chatbubbles-outline';
-                    else if (route.name === 'Profile') iconName = isFocused ? 'person' : 'person-outline';
+                    // Map route names to Icons8 icon names
+                    let iconName = 'home';
+                    if (route.name === 'Home') iconName = 'home';
+                    else if (route.name === 'UniGuide') iconName = 'school';
+                    else if (route.name === 'SyncLibrary') iconName = 'library';
+                    else if (route.name === 'ChatSync') iconName = 'chat-bubble';
+                    else if (route.name === 'Profile') iconName = 'user';
 
                     return (
                         <TouchableOpacity
@@ -89,13 +91,27 @@ export const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, 
                             style={styles.tabButton}
                         >
                             <View className="items-center justify-center">
-                                <Ionicons
+                                {isFocused && (
+                                    <Animated.View
+                                        entering={FadeIn.duration(200)}
+                                        style={{
+                                            position: 'absolute',
+                                            top: -6, // Slightly larger
+                                            bottom: -6,
+                                            left: -14,
+                                            right: -14,
+                                            backgroundColor: theme.colors.primary + '30', // Increased from 15
+                                            borderRadius: 20,
+                                            zIndex: -1,
+                                        }}
+                                    />
+                                )}
+                                <Icons8Icon
                                     name={iconName}
                                     size={22}
                                     color={isFocused ? theme.colors.primary : theme.colors.text.muted}
                                 />
                                 <Text
-                                    numberOfLines={1}
                                     style={[
                                         styles.tabText,
                                         { color: isFocused ? theme.colors.primary : theme.colors.text.muted }
@@ -121,22 +137,22 @@ const styles = StyleSheet.create({
     container: {
         position: 'absolute',
         alignSelf: 'center',
-        height: 68,
-        borderRadius: 30,
-        backgroundColor: 'rgba(255,255,255,0.7)',
+        height: 72, // Slightly taller
+        borderRadius: 36, // More rounded
+        backgroundColor: 'rgba(255,255,255,0.95)', // Almost solid white
         ...Platform.select({
             ios: {
                 shadowColor: '#000',
-                shadowOffset: { width: 0, height: 10 },
-                shadowOpacity: 0.1,
-                shadowRadius: 20,
+                shadowOffset: { width: 0, height: 12 },
+                shadowOpacity: 0.15, // Increased
+                shadowRadius: 24,
             },
             android: {
-                elevation: 10,
+                elevation: 16, // Increased
             },
         }),
-        borderWidth: 1,
-        borderColor: 'rgba(255,255,255,0.5)',
+        borderWidth: 2, // Thicker border
+        borderColor: 'rgba(255,255,255,1)', // Solid white border
         overflow: 'hidden',
     },
     blurContainer: {

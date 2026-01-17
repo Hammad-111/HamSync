@@ -24,11 +24,11 @@ export const ThemedCard: React.FC<ThemedCardProps> = ({
         backgroundColor: theme.colors.surface,
         borderRadius: theme.borderRadius.lg,
         padding: theme.spacing[padding],
-        borderWidth: 1,
-        borderColor: 'rgba(0,0,0,0.05)',
+        borderWidth: 1.5,
+        borderColor: 'rgba(0,0,0,0.08)', // Increased from 0.05
         ...theme.shadows.md,
         shadowColor: theme.colors.primary,
-        shadowOpacity: 0.1,
+        shadowOpacity: 0.12, // Increased from 0.1
         ...style,
     };
 

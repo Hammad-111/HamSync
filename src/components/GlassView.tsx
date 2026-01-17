@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Platform } from 'react-native';
-import { BlurView } from 'expo-blur';
+import { View } from 'react-native';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface GlassViewProps {
     children: React.ReactNode;
@@ -8,18 +8,21 @@ interface GlassViewProps {
     intensity?: number;
 }
 
-export const GlassView: React.FC<GlassViewProps> = ({ children, className = "", intensity = 20 }) => {
+export const GlassView: React.FC<GlassViewProps> = ({ children, className = "" }) => {
+    const { theme } = useTheme();
+
     return (
-        <View className={`overflow-hidden rounded-2xl border border-white/20 bg-white/10 ${className}`}>
-            {Platform.OS === 'android' ? (
-                <View className="p-4 bg-white/5">
-                    {children}
-                </View>
-            ) : (
-                <BlurView intensity={intensity} tint="light" className="p-4 flex-1">
-                    {children}
-                </BlurView>
-            )}
+        <View
+            style={{
+                backgroundColor: theme.colors.surface,
+                borderRadius: theme.borderRadius.lg,
+                borderWidth: 1,
+                borderColor: 'rgba(0,0,0,0.05)',
+                ...theme.shadows.sm,
+            }}
+            className={`overflow-hidden p-4 ${className}`}
+        >
+            {children}
         </View>
     );
 };

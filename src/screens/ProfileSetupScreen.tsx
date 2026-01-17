@@ -1,11 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, Animated, Easing, Image, Modal, FlatList, Dimensions, Platform } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Animated, Easing, Image, Modal, FlatList, Dimensions, Platform, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { saveUserProfile, calculateProfileScore } from '../services/userService';
 import { useToast } from '../contexts/ToastContext';
+import { useTheme } from '../contexts/ThemeContext';
+import { GradientBackground } from '../components/GradientBackground';
+import { ThemedInput } from '../components/ThemedInput';
 
 // --- Types & Data ---
 
@@ -63,6 +65,7 @@ const { width } = Dimensions.get('window');
 export const ProfileSetupScreen = () => {
     const navigation = useNavigation<any>();
     const { showToast } = useToast();
+    const { theme } = useTheme();
 
     // Form State
     const [educationLevel, setEducationLevel] = useState('');
@@ -100,11 +103,6 @@ export const ProfileSetupScreen = () => {
 
         setCurrentScore(newScore);
     }, [educationLevel, university, skills]);
-
-    // Clear skills when education level changes significantly (optional UX choice, keeping simpler for now)
-    // But we might want to ensure 'selected' skills remain valid? 
-    // For now, let's keep it simple. If they switch from 'Class 9' to 'Undergrad', the 'Physics' skill might still be relevant or we can clear specific academic ones.
-    // To match user request "scroll thora kum", we are dynamically showing.
 
     const getDynamicSkills = (): SkillOption[] => {
         if (activeCategory === 'Web' || activeCategory === 'Mobile') {
@@ -161,167 +159,178 @@ export const ProfileSetupScreen = () => {
     const displaySkills = getDynamicSkills();
 
     return (
-        <LinearGradient
-            colors={['#1E0A3C', '#2E1065', '#3B1A8C', '#2E1065']}
-            className="flex-1"
-        >
-            <SafeAreaView className="flex-1">
-                {/* Floating particles background */}
-                {[...Array(6)].map((_, index) => (
-                    <FloatingParticle key={index} delay={index * 400} index={index} />
-                ))}
+        <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+            <GradientBackground variant="header" particleCount={4} />
+
+            <View className="flex-1">
+                {/* Header Section */}
+                <View className="items-center w-full">
+                    <View className="w-full max-w-[600px] px-8 pb-6 pt-2 flex-row justify-between items-center">
+                        <View>
+                            <Text className="text-white text-3xl font-poppins font-bold">Build Profile</Text>
+                            <Text className="text-white/80 font-inter text-xs">Let's personalize your experience</Text>
+                        </View>
+
+                        {/* Score Badge */}
+                        <View
+                            style={{ backgroundColor: 'rgba(255,255,255,0.2)', ...theme.shadows.md }}
+                            className="items-center justify-center w-16 h-16 rounded-2xl border border-white/30"
+                        >
+                            <Text className="text-white font-bold text-xl">{currentScore}</Text>
+                            <Text className="text-white/80 text-[8px] font-bold uppercase tracking-tighter">Points</Text>
+                        </View>
+                    </View>
+                </View>
 
                 <ScrollView
                     showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{ paddingBottom: 100 }}
+                    contentContainerStyle={{ flexGrow: 1, paddingBottom: 100 }}
                     keyboardShouldPersistTaps="handled"
                 >
-                    {/* Header with Score */}
-                    <Animated.View
-                        style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}
-                        className="px-6 pt-6 mb-8"
-                    >
-                        <View className="flex-row justify-between items-start">
-                            <View>
-                                <Text className="text-white text-3xl font-poppins font-bold shadow-lg shadow-cyan-500/50">
-                                    Build Profile
-                                </Text>
-                                <Text className="text-gray-300 font-inter mt-2">
-                                    Let's personalize your experience.
-                                </Text>
-                            </View>
-                            {/* Score Points Badge */}
-                            <View className="items-center">
-                                <LinearGradient
-                                    colors={['#F59E0B', '#D97706']}
-                                    className="px-4 py-2 rounded-2xl items-center shadow-lg shadow-amber-500/30"
+                    <View className="flex-1 items-center px-6 pt-6">
+                        <View className="w-full max-w-[600px]">
+                            <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}>
+                                {/* Education Section */}
+                                <View
+                                    style={{
+                                        backgroundColor: theme.colors.surface,
+                                        ...theme.shadows.sm,
+                                        padding: 24,
+                                        borderRadius: 30,
+                                        borderWidth: 1,
+                                        borderColor: 'rgba(0,0,0,0.05)',
+                                        marginBottom: 24
+                                    }}
                                 >
-                                    <Text className="text-white font-bold text-lg">{currentScore}</Text>
-                                    <Text className="text-white/80 text-[10px] font-bold">POINTS</Text>
-                                </LinearGradient>
-                            </View>
-                        </View>
-                    </Animated.View>
+                                    <Text style={{ color: theme.colors.text.primary }} className="text-xl font-poppins font-bold mb-6">Education</Text>
 
-                    {/* Education Section */}
-                    <Animated.View
-                        style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}
-                        className="px-6 mb-8"
-                    >
-                        <Text className="text-gray-300 font-poppins font-semibold mb-3 ml-1">
-                            Current Education
-                        </Text>
+                                    <TouchableOpacity
+                                        onPress={() => setShowEduDropdown(true)}
+                                        activeOpacity={0.8}
+                                        style={{
+                                            backgroundColor: theme.colors.background,
+                                            borderColor: theme.colors.border,
+                                            borderRadius: 16,
+                                            padding: 16,
+                                            borderWidth: 1,
+                                            flexDirection: 'row',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            marginBottom: 16
+                                        }}
+                                    >
+                                        <View className="flex-1 flex-row items-center">
+                                            <Ionicons name="school-outline" size={20} color={theme.colors.primary} style={{ marginRight: 12 }} />
+                                            <Text style={{ color: educationLevel ? theme.colors.text.primary : theme.colors.text.muted }} className="font-inter">
+                                                {educationLevel || "Education Level"}
+                                            </Text>
+                                        </View>
+                                        <Ionicons name="chevron-down" size={20} color={theme.colors.text.muted} />
+                                    </TouchableOpacity>
 
-                        {/* Custom Dropdown Trigger */}
-                        <TouchableOpacity
-                            onPress={() => setShowEduDropdown(true)}
-                            activeOpacity={0.8}
-                            className="rounded-2xl overflow-hidden mb-4 border border-white/10"
-                        >
-                            <View className="bg-white/5 backdrop-blur-md p-4 flex-row justify-between items-center">
-                                <Text className={educationLevel ? "text-white font-inter" : "text-gray-400 font-inter"}>
-                                    {educationLevel || "Select Level (e.g., Class 10, Undergrad)"}
-                                </Text>
-                                <Ionicons name="chevron-down" size={20} color="#9ca3af" />
-                            </View>
-                        </TouchableOpacity>
+                                    <ThemedInput
+                                        placeholder="Institute Name"
+                                        value={university}
+                                        onChangeText={setUniversity}
+                                        leftIcon="business-outline"
+                                    />
+                                </View>
 
-                        {/* Institute Input */}
-                        <View className="rounded-2xl overflow-hidden border border-white/10">
-                            <View className="bg-white/5 backdrop-blur-md p-4">
-                                <TextInput
-                                    placeholder="Institute Name (School / College / Uni)"
-                                    placeholderTextColor="#6b7280"
-                                    className="text-white font-inter"
-                                    value={university}
-                                    onChangeText={setUniversity}
-                                />
-                            </View>
-                        </View>
-                    </Animated.View>
-
-                    {/* Skills Section */}
-                    <Animated.View
-                        style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}
-                        className="px-6"
-                    >
-                        <Text className="text-gray-300 font-poppins font-semibold mb-3 ml-1">
-                            Skills & Expertise
-                        </Text>
-
-                        {/* Category Tabs */}
-                        <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-4">
-                            {(['Web', 'Mobile', 'Academic'] as Category[]).map((cat) => (
-                                <TouchableOpacity
-                                    key={cat}
-                                    onPress={() => setActiveCategory(cat)}
-                                    className={`mr-3 px-6 py-3 rounded-full border ${activeCategory === cat
-                                        ? 'bg-[#8B5CF6] border-[#8B5CF6]'
-                                        : 'bg-white/5 border-white/10'
-                                        }`}
+                                {/* Skills Section */}
+                                <View
+                                    style={{
+                                        backgroundColor: theme.colors.surface,
+                                        ...theme.shadows.sm,
+                                        padding: 24,
+                                        borderRadius: 30,
+                                        borderWidth: 1,
+                                        borderColor: 'rgba(0,0,0,0.05)'
+                                    }}
                                 >
-                                    <Text className={`font-inter font-medium ${activeCategory === cat ? 'text-white' : 'text-gray-400'}`}>
-                                        {cat} Dev
-                                    </Text>
-                                </TouchableOpacity>
-                            ))}
-                        </ScrollView>
+                                    <Text style={{ color: theme.colors.text.primary }} className="text-xl font-poppins font-bold mb-6">Skills & Expertise</Text>
 
-                        {/* Skills Grid */}
-                        <View className="flex-row flex-wrap gap-3 min-h-[100px]">
-                            {activeCategory === 'Academic' && !educationLevel ? (
-                                <Text className="text-gray-500 font-inter italic ml-2">Select Education Level first to see relevant subjects.</Text>
-                            ) : (
-                                displaySkills.map((skill) => {
-                                    const isSelected = skills.includes(skill.name);
-                                    return (
-                                        <TouchableOpacity
-                                            key={skill.id}
-                                            onPress={() => toggleSkill(skill.name)}
-                                            activeOpacity={0.7}
-                                        >
-                                            <LinearGradient
-                                                colors={isSelected
-                                                    ? ['#8B5CF6', '#EC4899']
-                                                    : ['rgba(255,255,255,0.05)', 'rgba(255,255,255,0.05)']}
-                                                start={{ x: 0, y: 0 }}
-                                                end={{ x: 1, y: 1 }}
-                                                className="px-4 py-3 rounded-xl border"
+                                    {/* Category Tabs */}
+                                    <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-6">
+                                        {(['Web', 'Mobile', 'Academic'] as Category[]).map((cat) => (
+                                            <TouchableOpacity
+                                                key={cat}
+                                                onPress={() => setActiveCategory(cat)}
                                                 style={{
-                                                    borderColor: isSelected ? 'transparent' : 'rgba(255,255,255,0.1)'
+                                                    backgroundColor: activeCategory === cat ? theme.colors.primary : theme.colors.background,
+                                                    borderColor: activeCategory === cat ? theme.colors.primary : theme.colors.border
                                                 }}
+                                                className="mr-3 px-6 py-2.5 rounded-full border"
                                             >
-                                                <Text className={`font-inter text-sm ${isSelected ? 'text-white font-semibold' : 'text-gray-400'}`}>
-                                                    {skill.name}
+                                                <Text className={`font-inter font-semibold text-xs ${activeCategory === cat ? 'text-white' : 'text-gray-500'}`}>
+                                                    {cat} {cat === 'Academic' ? 'Subjects' : 'Dev'}
                                                 </Text>
-                                            </LinearGradient>
-                                        </TouchableOpacity>
-                                    );
-                                })
-                            )}
+                                            </TouchableOpacity>
+                                        ))}
+                                    </ScrollView>
+
+                                    {/* Skills Grid */}
+                                    <View className="flex-row flex-wrap gap-2.5">
+                                        {activeCategory === 'Academic' && !educationLevel ? (
+                                            <View className="py-4 items-center w-full">
+                                                <Text style={{ color: theme.colors.text.muted }} className="font-inter italic text-xs">Select education level first</Text>
+                                            </View>
+                                        ) : (
+                                            displaySkills.map((skill) => {
+                                                const isSelected = skills.includes(skill.name);
+                                                return (
+                                                    <TouchableOpacity
+                                                        key={skill.id}
+                                                        onPress={() => toggleSkill(skill.name)}
+                                                        activeOpacity={0.7}
+                                                        style={{
+                                                            backgroundColor: isSelected ? theme.colors.primary + '15' : 'transparent',
+                                                            borderColor: isSelected ? theme.colors.primary : theme.colors.border,
+                                                            paddingHorizontal: 16,
+                                                            paddingVertical: 10,
+                                                            borderRadius: 12,
+                                                            borderWidth: 1
+                                                        }}
+                                                    >
+                                                        <Text style={{ color: isSelected ? theme.colors.primary : theme.colors.text.secondary }} className="font-inter text-xs font-semibold">
+                                                            {skill.name}
+                                                        </Text>
+                                                    </TouchableOpacity>
+                                                );
+                                            })
+                                        )}
+                                    </View>
+                                </View>
+                            </Animated.View>
                         </View>
-                    </Animated.View>
+                    </View>
                 </ScrollView>
 
-                {/* Floating Action Button */}
-                <View className="absolute bottom-8 left-6 right-6">
-                    <TouchableOpacity
-                        onPress={handleSaveProfile}
-                        disabled={isLoading}
-                        activeOpacity={0.9}
-                    >
-                        <LinearGradient
-                            colors={['#06B6D4', '#3B82F6']}
-                            start={{ x: 0, y: 0 }}
-                            end={{ x: 1, y: 0 }}
-                            className="py-4 rounded-2xl flex-row justify-center items-center shadow-lg shadow-cyan-500/30"
+                {/* Save Button */}
+                <View className="absolute bottom-10 left-0 right-0 items-center">
+                    <View className="w-full max-w-[600px] px-8">
+                        <TouchableOpacity
+                            onPress={handleSaveProfile}
+                            disabled={isLoading}
+                            activeOpacity={0.9}
+                            style={{
+                                backgroundColor: theme.colors.primary,
+                                ...theme.shadows.lg,
+                                opacity: isLoading ? 0.7 : 1
+                            }}
+                            className="py-4 rounded-2xl flex-row justify-center items-center"
                         >
-                            <Text className="text-white font-bold font-poppins text-lg mr-2">
-                                {isLoading ? "Saving..." : "Complete Profile"}
-                            </Text>
-                            {!isLoading && <Ionicons name="arrow-forward" size={20} color="white" />}
-                        </LinearGradient>
-                    </TouchableOpacity>
+                            {isLoading ? (
+                                <ActivityIndicator color="white" />
+                            ) : (
+                                <>
+                                    <Text className="text-white font-bold font-poppins text-lg mr-2">
+                                        Complete Profile
+                                    </Text>
+                                    <Ionicons name="checkmark-circle-outline" size={22} color="white" />
+                                </>
+                            )}
+                        </TouchableOpacity>
+                    </View>
                 </View>
 
                 {/* Education Dropdown Modal */}
@@ -332,26 +341,31 @@ export const ProfileSetupScreen = () => {
                     onRequestClose={() => setShowEduDropdown(false)}
                 >
                     <TouchableOpacity
-                        className="flex-1 bg-black/80 backdrop-blur-sm justify-center px-6"
+                        style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+                        className="flex-1 justify-center items-center px-8"
                         activeOpacity={1}
                         onPress={() => setShowEduDropdown(false)}
                     >
-                        <View className="bg-[#1E1E2E] rounded-3xl overflow-hidden border border-white/10 max-h-[60%] shadow-2xl shadow-black">
-                            <View className="p-4 border-b border-white/10 bg-white/5">
-                                <Text className="text-white font-poppins font-bold text-center">Select Level</Text>
+                        <View style={{ backgroundColor: theme.colors.surface }} className="w-full max-w-[500px] rounded-[30px] overflow-hidden border border-black/5 max-h-[60%] shadow-2xl">
+                            <View style={{ borderBottomWidth: 1, borderBottomColor: theme.colors.border }} className="p-5 items-center">
+                                <Text style={{ color: theme.colors.text.primary }} className="font-poppins font-bold text-lg">Select Level</Text>
                             </View>
                             <FlatList
                                 data={EDUCATION_LEVELS}
                                 keyExtractor={(item) => item}
                                 renderItem={({ item }) => (
                                     <TouchableOpacity
-                                        className="p-4 border-b border-white/5 active:bg-white/10"
+                                        style={{ borderBottomWidth: 0.5, borderBottomColor: theme.colors.border }}
+                                        className="p-5 active:bg-black/5"
                                         onPress={() => {
                                             setEducationLevel(item);
                                             setShowEduDropdown(false);
                                         }}
                                     >
-                                        <Text className={`font-inter text-base ${educationLevel === item ? 'text-cyan-400 font-bold' : 'text-gray-300'}`}>
+                                        <Text style={{
+                                            color: educationLevel === item ? theme.colors.primary : theme.colors.text.primary,
+                                            fontWeight: educationLevel === item ? 'bold' : 'normal'
+                                        }} className="font-inter text-base text-center">
                                             {item}
                                         </Text>
                                     </TouchableOpacity>
@@ -360,99 +374,7 @@ export const ProfileSetupScreen = () => {
                         </View>
                     </TouchableOpacity>
                 </Modal>
-            </SafeAreaView>
-        </LinearGradient>
-    );
-};
-
-// Floating particle component (Duplicated from LoginScreen for isolated consistency)
-const FloatingParticle = ({ delay, index }: { delay: number; index: number }) => {
-    const translateY = useRef(new Animated.Value(0)).current;
-    const translateX = useRef(new Animated.Value(0)).current;
-    const opacity = useRef(new Animated.Value(0)).current;
-
-    useEffect(() => {
-        setTimeout(() => {
-            Animated.loop(
-                Animated.parallel([
-                    Animated.sequence([
-                        Animated.timing(translateY, {
-                            toValue: -60,
-                            duration: 3500 + index * 200,
-                            easing: Easing.inOut(Easing.sin),
-                            useNativeDriver: true,
-                        }),
-                        Animated.timing(translateY, {
-                            toValue: 0,
-                            duration: 3500 + index * 200,
-                            easing: Easing.inOut(Easing.sin),
-                            useNativeDriver: true,
-                        }),
-                    ]),
-                    Animated.sequence([
-                        Animated.timing(translateX, {
-                            toValue: index % 2 === 0 ? 30 : -30,
-                            duration: 2500 + index * 150,
-                            easing: Easing.inOut(Easing.sin),
-                            useNativeDriver: true,
-                        }),
-                        Animated.timing(translateX, {
-                            toValue: 0,
-                            duration: 2500 + index * 150,
-                            easing: Easing.inOut(Easing.sin),
-                            useNativeDriver: true,
-                        }),
-                    ]),
-                    Animated.sequence([
-                        Animated.timing(opacity, {
-                            toValue: 0.6,
-                            duration: 1500,
-                            useNativeDriver: true,
-                        }),
-                        Animated.timing(opacity, {
-                            toValue: 0.2,
-                            duration: 1500,
-                            useNativeDriver: true,
-                        }),
-                    ]),
-                ])
-            ).start();
-        }, delay);
-    }, []);
-
-    const positions = [
-        { top: 100, left: 40 },
-        { top: 180, right: 50 },
-        { top: 300, left: 30 },
-        { bottom: 200, right: 60 },
-        { bottom: 300, left: 50 },
-        { top: 240, right: 30 },
-    ];
-
-    const colors = ['#06B6D4', '#3B82F6', '#8B5CF6', '#EC4899'];
-
-    return (
-        <Animated.View
-            style={{
-                position: 'absolute',
-                ...positions[index],
-                transform: [{ translateY }, { translateX }],
-                opacity,
-                zIndex: 0,
-            }}
-        >
-            <View
-                style={{
-                    width: 6,
-                    height: 6,
-                    borderRadius: 3,
-                    backgroundColor: colors[index % colors.length],
-                    shadowColor: colors[index % colors.length],
-                    shadowOffset: { width: 0, height: 0 },
-                    shadowOpacity: 0.8,
-                    shadowRadius: 6,
-                }}
-            />
-        </Animated.View>
+            </View>
+        </View>
     );
 };

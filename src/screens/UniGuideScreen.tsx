@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, TextInput } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { GlassView } from '../components/GlassView';
+import { useTheme } from '../contexts/ThemeContext';
+import { GradientBackground } from '../components/GradientBackground';
 import { useNavigation } from '@react-navigation/native';
-import { Ionicons } from '@expo/vector-icons';
 import { useToast } from '../contexts/ToastContext';
+import { Ionicons } from '@expo/vector-icons';
+import { AdvancedHeader } from '../components/AdvancedHeader';
 
 const UNIVERSITIES = [
     {
@@ -41,6 +42,7 @@ const UNIVERSITIES = [
 export const UniGuideScreen = () => {
     const navigation = useNavigation<any>();
     const { showToast } = useToast();
+    const { theme } = useTheme();
     const [search, setSearch] = useState('');
 
     const filteredUnis = UNIVERSITIES.filter(uni =>
@@ -49,64 +51,89 @@ export const UniGuideScreen = () => {
     );
 
     return (
-        <SafeAreaView className="flex-1 bg-primary px-6" edges={['top']}>
-            <View className="flex-row justify-between items-center mb-6 mt-4">
-                <Text className="text-white text-3xl font-poppins font-bold">UniGuide</Text>
-            </View>
+        <GradientBackground variant="header" particleCount={6}>
+            <AdvancedHeader
+                title="UniGuide"
+                subtitle="Explore top universities"
+                showBack={false}
+                rightAction={{
+                    icon: 'search-outline',
+                    onPress: () => { } // Focus search
+                }}
+            />
 
             {/* Search Bar matching Home Screen */}
-            <View className="mb-4">
-                <View className="bg-white/10 rounded-xl border border-white/10 flex-row items-center px-4">
-                    <Text className="text-gray-400 mr-2">🔍</Text>
+            <View className="items-center w-full mb-6 z-10">
+                <View style={{
+                    backgroundColor: theme.colors.surface,
+                    ...theme.shadows.lg,
+                    borderRadius: theme.borderRadius.xl,
+                    borderWidth: 1.5,
+                    borderColor: 'rgba(0,0,0,0.03)',
+                    maxWidth: 800
+                }} className="w-full mx-6 flex-row items-center px-5 py-0.5">
+                    <Ionicons name="search-outline" size={20} color={theme.colors.text.muted} />
                     <TextInput
                         placeholder="Search universities..."
-                        placeholderTextColor="#9ca3af"
-                        className="flex-1 text-white py-3 font-inter"
+                        placeholderTextColor={theme.colors.text.muted}
+                        style={{ color: theme.colors.text.primary, height: 50 }}
+                        className="flex-1 ml-3 font-inter font-medium"
                         value={search}
                         onChangeText={setSearch}
                     />
                 </View>
             </View>
 
-            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 50 }}>
-                {filteredUnis.map(uni => (
-                    <GlassView key={uni.id} className="mb-3 px-3 py-3 flex-row justify-between items-center">
-                        <View className="flex-1">
-                            <Text className="text-white font-bold text-base mb-0.5">{uni.name}</Text>
-                            <Text className="text-gray-400 text-[11px] mb-2">{uni.location} • {uni.type}.</Text>
-
-                            {/* Entrance Test Badge - User ko foran pata chalay ga konsa test dena ha */}
-                            <View className="flex-row items-center bg-accent/20 self-start px-2 py-0.5 rounded-md">
-                                <Ionicons name="school-outline" size={10} color="#00C8FF" />
-                                <Text className="text-accent text-[9px] font-bold ml-1 uppercase">{uni.test}</Text>
-                            </View>
-                        </View>
-
-                        <View className="items-end">
-                            <Text className="text-accent font-bold text-sm mb-1">{uni.merit}</Text>
-
-                            {/* Ratio Display - Formula details k liye */}
-                            <Text className="text-gray-500 text-[9px] mb-2 font-medium">Ratio: {uni.formula}</Text>
-
-                            <View className="flex-row gap-2">
-                                <TouchableOpacity
-                                    className="flex-row items-center bg-white/10 px-3 py-1.5 rounded-lg border border-white/20 active:bg-white/20"
-                                    onPress={() => {
-                                        if (['NUST', 'UET', 'COMSATS'].includes(uni.name)) {
-                                            navigation.navigate('MeritCalculator', { university: uni.name });
-                                        } else {
-                                            showToast('Coming Soon', 'Calculator for this university is coming soon!', 'info');
-                                        }
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1, paddingBottom: 100, paddingTop: 10 }}>
+                <View className="flex-1 items-center px-6">
+                    <View className="w-full max-w-[800px] flex-row flex-wrap justify-between">
+                        {filteredUnis.map(uni => (
+                            <View key={uni.id} className="w-full md:w-[48%] lg:w-[31%] mb-4">
+                                <View
+                                    style={{
+                                        backgroundColor: theme.colors.surface,
+                                        borderRadius: theme.borderRadius.lg,
+                                        borderWidth: 1,
+                                        borderColor: 'rgba(0,0,0,0.05)',
+                                        ...theme.shadows.sm,
                                     }}
+                                    className="p-4 flex-row justify-between items-center h-full"
                                 >
-                                    <Ionicons name="calculator-outline" size={14} color="white" />
-                                    <Text className="text-white text-[12px] font-semibold ml-1.5">Calculate</Text>
-                                </TouchableOpacity>
+                                    <View className="flex-1">
+                                        <Text style={{ color: theme.colors.text.primary }} className="font-bold text-base mb-0.5">{uni.name}</Text>
+                                        <Text style={{ color: theme.colors.text.muted }} className="text-[11px] mb-2">{uni.location} • {uni.type}.</Text>
+
+                                        <View style={{ backgroundColor: theme.colors.primary + '15', borderColor: theme.colors.primary + '30' }} className="flex-row items-center self-start px-2 py-0.5 rounded-md border">
+                                            <Ionicons name="school-outline" size={10} color={theme.colors.primary} />
+                                            <Text style={{ color: theme.colors.primary }} className="text-[9px] font-bold ml-1 uppercase">{uni.test}</Text>
+                                        </View>
+                                    </View>
+
+                                    <View className="items-end">
+                                        <Text style={{ color: theme.colors.primary }} className="font-bold text-sm mb-1">{uni.merit}</Text>
+                                        <Text style={{ color: theme.colors.text.muted }} className="text-[9px] mb-2 font-medium">Ratio: {uni.formula}</Text>
+
+                                        <TouchableOpacity
+                                            style={{ backgroundColor: theme.colors.primary + '10', borderColor: theme.colors.primary + '20' }}
+                                            className="flex-row items-center px-3 py-1.5 rounded-lg border active:opacity-70"
+                                            onPress={() => {
+                                                if (['NUST', 'UET', 'COMSATS'].includes(uni.name)) {
+                                                    navigation.navigate('MeritCalculator', { university: uni.name });
+                                                } else {
+                                                    showToast('Coming Soon', 'Calculator for this university is coming soon!', 'info');
+                                                }
+                                            }}
+                                        >
+                                            <Ionicons name="calculator-outline" size={14} color={theme.colors.primary} />
+                                            <Text style={{ color: theme.colors.primary }} className="text-[12px] font-semibold ml-1.5">Calculate</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
                             </View>
-                        </View>
-                    </GlassView>
-                ))}
+                        ))}
+                    </View>
+                </View>
             </ScrollView>
-        </SafeAreaView>
+        </GradientBackground>
     );
 };

@@ -1,12 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TextInput, TouchableOpacity, ScrollView, Linking, Image, ActivityIndicator } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { GlassView } from '../components/GlassView';
-import { PostCard, Post } from '../components/PostCard';
-import { BlurView } from 'expo-blur';
-import { auth, db } from '../services/firebaseConfig';
-import { doc, onSnapshot, collection, query, orderBy } from 'firebase/firestore';
+import { View, Text, ScrollView, TouchableOpacity, TextInput, Image, ActivityIndicator, Linking } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useTheme } from '../contexts/ThemeContext';
+import { GradientBackground } from '../components/GradientBackground';
+import { Ionicons } from '@expo/vector-icons';
+import { auth, db } from '../services/firebaseConfig';
+import { doc, onSnapshot, query, collection, orderBy } from 'firebase/firestore';
+import { PostCard } from '../components/PostCard';
+import { AdvancedHeader } from '../components/AdvancedHeader';
+
+interface Post {
+    id: string;
+    author: {
+        name: string;
+        university: string;
+        avatar?: string;
+    };
+    type: 'ASKING' | 'OFFERING';
+    subject: string;
+    title: string;
+    description: string;
+    timestamp: string;
+}
 
 const LEARNING_WEBSITES = [
     { id: 3, name: 'MDN Web Docs', url: 'https://developer.mozilla.org', image: require('../../assets/MDNWebDocs.png') },
@@ -19,6 +34,7 @@ const LEARNING_WEBSITES = [
 
 export const HomeScreen = () => {
     const navigation = useNavigation<any>();
+    const { theme } = useTheme();
     const [searchQuery, setSearchQuery] = useState('');
     const [userName, setUserName] = useState('');
     const [userPoints, setUserPoints] = useState(0);
@@ -28,10 +44,7 @@ export const HomeScreen = () => {
     useEffect(() => {
         const user = auth.currentUser;
         if (user) {
-            // Set initial name from Auth
             setUserName(user.displayName || 'Scholar');
-
-            // Listen to real-time updates for User Data
             const userRef = doc(db, 'users', user.uid);
             const unsubscribeUser = onSnapshot(userRef, (doc) => {
                 if (doc.exists()) {
@@ -41,7 +54,6 @@ export const HomeScreen = () => {
                 }
             });
 
-            // Listen to real-time updates for Posts
             const postsQuery = query(collection(db, 'posts'), orderBy('createdAt', 'desc'));
             const unsubscribePosts = onSnapshot(postsQuery, (snapshot) => {
                 const fetchedPosts: Post[] = snapshot.docs.map(doc => ({
@@ -59,110 +71,155 @@ export const HomeScreen = () => {
         }
     }, []);
 
-    const handleChatPress = () => {
-        navigation.navigate('ChatSync');
-    };
-
-    const handleCreatePost = () => {
-        navigation.navigate('CreatePost');
-    };
+    const handleChatPress = () => navigation.navigate('ChatSync');
+    const handleCreatePost = () => navigation.navigate('CreatePost');
 
     return (
-        <SafeAreaView className="flex-1 bg-primary" edges={['top']}>
-            {/* Top Bar */}
-            <View className="flex-row items-center justify-between px-6 py-4">
-                <View className="flex-row items-center">
-                    <View className="w-10 h-10 bg-accent rounded-full justify-center items-center">
-                        <Text className="text-white font-bold text-lg">
-                            {userName ? userName.charAt(0).toUpperCase() : 'U'}
+        <GradientBackground variant="header" particleCount={8}>
+            <AdvancedHeader
+                title="HamSync"
+                subtitle={`Hi, ${userName.split(' ')[0]} 👋`}
+                showBack={false}
+                customRight={
+                    <View style={{
+                        backgroundColor: 'rgba(0,0,0,0.2)',
+                        borderColor: 'rgba(251, 191, 36, 0.5)', // Amber border
+                        borderWidth: 1
+                    }} className="px-3 py-1.5 rounded-full flex-row items-center backdrop-blur-md">
+                        <Ionicons name="ribbon" size={16} color="#FBBF24" style={{ marginRight: 6 }} />
+                        <Text style={{ color: '#FBBF24', fontSize: 13, fontWeight: '800', letterSpacing: 0.5 }}>
+                            {userPoints} Reputation
                         </Text>
                     </View>
-                    <View className="ml-3">
-                        <Text className="text-white font-poppins font-bold text-lg">Hi, {userName.split(' ')[0]}</Text>
-                        <Text className="text-gray-300 text-xs">Ready to learn?</Text>
-                    </View>
-                </View>
-                <View className="bg-white/10 px-3 py-1 rounded-full border border-white/20 flex-row items-center">
-                    <Text className="text-yellow-400 mr-1">✨</Text>
-                    <Text className="text-white font-bold">{userPoints} KP</Text>
-                </View>
-            </View>
+                }
+            />
 
-            {/* Search Bar */}
-            <View className="mx-6 mb-4">
-                <View className="bg-white/10 rounded-xl border border-white/10 flex-row items-center px-4">
-                    <Text className="text-gray-400 mr-2">🔍</Text>
+            {/* Search Bar - Floating partially on curve */}
+            <View className="items-center w-full mb-6 z-10">
+                <View style={{
+                    backgroundColor: theme.colors.surface,
+                    ...theme.shadows.lg,
+                    borderRadius: theme.borderRadius.xl,
+                    borderWidth: 1.5,
+                    borderColor: 'rgba(0,0,0,0.03)',
+                    maxWidth: 800
+                }} className="w-full mx-6 flex-row items-center px-5 py-0.5">
+                    <Ionicons name="search-outline" size={20} color={theme.colors.text.muted} />
                     <TextInput
-                        placeholder="Search..."
-                        placeholderTextColor="#9ca3af"
-                        className="flex-1 text-white py-3"
+                        placeholder="What do you want to learn today?"
+                        placeholderTextColor={theme.colors.text.muted}
+                        style={{ color: theme.colors.text.primary, height: 50 }}
+                        className="flex-1 ml-3 font-inter font-medium"
                         value={searchQuery}
                         onChangeText={setSearchQuery}
                     />
                 </View>
             </View>
 
-            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}>
-                {/* Top Learning Websites */}
-                <View className="mb-6">
-                    <View className="flex-row justify-between items-center px-6 mb-3">
-                        <Text className="text-white font-poppins font-bold text-lg">Top Websites</Text>
-                        <TouchableOpacity>
-                            <Text className="text-accent text-sm">See all</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 24 }}>
-                        {LEARNING_WEBSITES.map((item) => (
-                            <TouchableOpacity
-                                key={item.id}
-                                onPress={() => Linking.openURL(item.url)}
-                                activeOpacity={0.7}
-                            >
-                                <GlassView className="w-32 h-36 mr-4 justify-center items-center p-3">
-                                    <View className="w-20 h-20 mb-2 justify-center items-center">
-                                        <Image
-                                            source={item.image}
-                                            style={{ width: '100%', height: '100%' }}
-                                            resizeMode="contain"
-                                        />
-                                    </View>
-                                    <Text className="text-white font-bold text-center text-xs" numberOfLines={2}>
-                                        {item.name}
-                                    </Text>
-                                </GlassView>
-                            </TouchableOpacity>
-                        ))}
-                    </ScrollView>
-                </View>
+            <ScrollView
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{ flexGrow: 1, paddingBottom: 100, paddingTop: 10 }}
+            >
+                <View className="flex-1 items-center">
+                    <View className="w-full max-w-[800px]">
 
-                {/* Feed */}
-                <View className="px-6">
-                    <Text className="text-white font-poppins font-bold text-lg mb-3">Recent Posts</Text>
-                    {loadingPosts ? (
-                        <ActivityIndicator size="large" color="#06B6D4" />
-                    ) : (
-                        posts.map(post => (
-                            <PostCard
-                                key={post.id}
-                                post={post}
-                                onPress={handleChatPress}
-                                searchQuery={searchQuery}
-                            />
-                        ))
-                    )}
-                    {!loadingPosts && posts.length === 0 && (
-                        <Text className="text-gray-400 text-center mt-4">No recent posts. Be the first!</Text>
-                    )}
+                        {/* Top Learning Websites */}
+                        <View className="mb-8">
+                            <View className="flex-row justify-between items-center px-6 mb-4">
+                                <Text style={{ color: theme.colors.text.primary }} className="font-poppins font-bold text-lg">Quick Resources</Text>
+                                <TouchableOpacity>
+                                    <Text style={{ color: theme.colors.primary }} className="font-semibold text-sm">See all</Text>
+                                </TouchableOpacity>
+                            </View>
+                            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 24 }}>
+                                {LEARNING_WEBSITES.map((item) => (
+                                    <TouchableOpacity
+                                        key={item.id}
+                                        onPress={() => Linking.openURL(item.url)}
+                                        activeOpacity={0.7}
+                                    >
+                                        <View
+                                            style={{
+                                                backgroundColor: theme.colors.surface,
+                                                borderRadius: theme.borderRadius.lg,
+                                                ...theme.shadows.md,
+                                                width: 120,
+                                                height: 140,
+                                                marginRight: 16,
+                                                padding: 16,
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                borderWidth: 1,
+                                                borderColor: 'rgba(0,0,0,0.03)'
+                                            }}
+                                        >
+                                            <View className="w-16 h-16 mb-3 justify-center items-center">
+                                                <Image
+                                                    source={item.image}
+                                                    style={{ width: '100%', height: '100%' }}
+                                                    resizeMode="contain"
+                                                />
+                                            </View>
+                                            <Text style={{ color: theme.colors.text.primary }} className="font-bold text-center text-xs" numberOfLines={1}>
+                                                {item.name}
+                                            </Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                ))}
+                            </ScrollView>
+                        </View>
+
+                        {/* Academic Feed */}
+                        <View className="px-6">
+                            <Text style={{ color: theme.colors.text.primary }} className="font-poppins font-bold text-lg mb-4">Academic Feed</Text>
+
+                            {loadingPosts ? (
+                                <ActivityIndicator size="large" color={theme.colors.primary} className="py-10" />
+                            ) : (
+                                <View className="flex-row flex-wrap justify-between">
+                                    {posts.length === 0 ? (
+                                        <View className="w-full items-center py-10 opacity-50">
+                                            <Text style={{ color: theme.colors.text.muted }} className="text-center font-inter">
+                                                No recent posts. Be the first to share something!
+                                            </Text>
+                                        </View>
+                                    ) : (
+                                        posts.map(post => (
+                                            <View key={post.id} className="w-full md:w-[48%] lg:w-[31%] mb-4">
+                                                <PostCard
+                                                    post={post}
+                                                    onPress={handleChatPress}
+                                                    searchQuery={searchQuery}
+                                                />
+                                            </View>
+                                        ))
+                                    )}
+                                </View>
+                            )}
+                        </View>
+                    </View>
                 </View>
             </ScrollView>
 
             {/* FAB */}
             <TouchableOpacity
-                className="absolute bottom-6 right-6 w-14 h-14 bg-accent rounded-full justify-center items-center shadow-lg shadow-black/50"
                 onPress={handleCreatePost}
+                style={{
+                    backgroundColor: theme.colors.primary,
+                    ...theme.shadows.lg,
+                    position: 'absolute',
+                    bottom: 24,
+                    right: 24,
+                    width: 56,
+                    height: 56,
+                    borderRadius: 28,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    shadowColor: theme.colors.primary,
+                }}
             >
-                <Text className="text-white text-3xl font-light">+</Text>
+                <Ionicons name="add-outline" size={32} color="white" />
             </TouchableOpacity>
-        </SafeAreaView>
+        </GradientBackground >
     );
 };

@@ -19,6 +19,9 @@ import {
 } from '@expo-google-fonts/inter';
 import { RootNavigator } from './src/navigation/RootNavigator';
 import { ToastProvider } from './src/contexts/ToastContext';
+import { ThemeProvider } from './src/contexts/ThemeContext';
+
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -44,11 +47,15 @@ export default function App() {
   }
 
   return (
-    <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-      <ToastProvider>
-        <RootNavigator />
-      </ToastProvider>
-      <StatusBar style="light" />
-    </View>
+    <SafeAreaProvider>
+      <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+        <ThemeProvider initialTheme="midnight">
+          <ToastProvider>
+            <RootNavigator />
+          </ToastProvider>
+        </ThemeProvider>
+        <StatusBar style="light" />
+      </View>
+    </SafeAreaProvider>
   );
 }

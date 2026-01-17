@@ -11,6 +11,10 @@ import { MeritCalculatorScreen } from '../screens/MeritCalculatorScreen';
 
 import { ChatScreen } from '../screens/ChatScreen';
 import { CreatePostScreen } from '../screens/CreatePostScreen';
+import { PrivacyPolicyScreen } from '../screens/PrivacyPolicyScreen';
+import { TermsConditionsScreen } from '../screens/TermsConditionsScreen';
+import { HelpSupportScreen } from '../screens/HelpSupportScreen';
+import { AboutScreen } from '../screens/AboutScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -27,6 +31,10 @@ export const RootNavigator = () => {
                 <Stack.Screen name="MeritCalculator" component={MeritCalculatorScreen} />
                 <Stack.Screen name="Chat" component={ChatScreen} />
                 <Stack.Screen name="CreatePost" component={CreatePostScreen} />
+                <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
+                <Stack.Screen name="TermsConditions" component={TermsConditionsScreen} />
+                <Stack.Screen name="HelpSupport" component={HelpSupportScreen} />
+                <Stack.Screen name="About" component={AboutScreen} />
             </Stack.Navigator>
         </NavigationContainer>
     );
